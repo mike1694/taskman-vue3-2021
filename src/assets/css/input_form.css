@@ -1,0 +1,35 @@
+input[type=date],
+input[type=time],
+input[type=text],
+textarea,
+select {
+  pointer-events: auto;
+  box-sizing: border-box;
+  margin: 0;
+  text-transform: none;
+  word-wrap: normal;
+  display: inline-block;
+  width: 100%;
+  padding: .375rem .75rem .375rem .75rem;
+  font-weight: 400;
+  color: #495057;
+  vertical-align: middle;
+  border: 1px solid #ced4da;
+  appearance: none;
+  transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  border-radius: 4px;
+}
+
+select {
+  cursor: pointer;
+}
+
+input[type=date]:focus,
+input[type=time]:focus,
+input[type=text]:focus,
+textarea:focus,
+select:focus {
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
+}
