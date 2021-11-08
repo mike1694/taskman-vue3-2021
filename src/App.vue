@@ -4,7 +4,7 @@
     <router-link to="/create">Создать задачу</router-link> |
     <router-link to="/diary">История</router-link>
   </div>
-  <div class="wallpaper"></div>
+  <!-- <div class="wallpaper"></div> -->
   <router-view/>
 </template>
 <script lang="ts">
@@ -28,7 +28,7 @@ export default defineComponent({
 
 <style lang="scss">
 #app {
-  // font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -36,7 +36,7 @@ export default defineComponent({
 }
 
 .wallpaper {
-  background-image: url(assets/img/halloween.jpg);
+  // background-image: url(assets/img/halloween.jpg);
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
