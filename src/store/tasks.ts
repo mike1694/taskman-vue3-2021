@@ -13,6 +13,7 @@ export default {
       state.tasks.map((i: any) => payload.id === i.id ? payload : i),
     toggle_edit_task: (state: any, payload: string) => state.edit_task =
       state.edit_task === payload ? null : payload,
+    reset_edit_task: (state: any) => state.edit_task = null
   }, 
   getters: {
     get_all_tasks: (state: any): [] => state.tasks,

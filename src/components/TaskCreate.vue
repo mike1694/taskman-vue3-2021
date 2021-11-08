@@ -47,12 +47,6 @@ export default defineComponent({
       }
     }
   },
-  mounted() {
-    document.body.addEventListener('keyup', this.keyupHandler);
-  },
-  beforeUnmount() {
-    document.body.addEventListener('keyup', this.keyupHandler);
-  },
   computed: {
     ...mapGetters('tasks', {
       tasks: 'get_all_tasks'
@@ -108,29 +102,22 @@ export default defineComponent({
         }
       }
     },
-    keyupHandler(e: any) {
-      switch(e.code) {
-        case 'NumpadEnter':
-        case 'Enter':
-          if(Array.from(e.target.classList).includes('create-task-modal__header--textarea')) {
-            break;
-          }
-            
-          this.addTask();
-          break;
-        case 'NumpadAdd':
-        case 'Equal':
-          /* this.$bvModal.show('create-task-modal'); */
-          break;
-      }
-    }
+    
   }
 })
 </script>
 
 <style scoped>
 .task-create {
-  width: 300px;
   margin: 0 auto;
+  margin-bottom: 5px;
+  margin-top: 30px;
+  padding: 10px;
+
+  color: #2c3e50;
+  border: 1px solid #d3d3d34d;
+  border-radius: 5px;
+  width: 350px;
+  background-color: #f5f5f5;
 }
 </style>

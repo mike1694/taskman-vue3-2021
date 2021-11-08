@@ -15,7 +15,7 @@
         </div>
 
         <div  v-if="getEditTask === item.id">
-          <h5>Редактирование задачи</h5>
+          <h5 class="mb2">Редактирование задачи</h5>
           <task-form
             :key="className + '-form-' + item.id"
             :modelValue="item"
@@ -76,7 +76,6 @@ export default defineComponent({
       this.updateTask(item);
     },
     editOnClick(id: number, e: any) {
-      console.log({id, e});
       if(this.getEditTask !== id) {
         this.scrollTo(e);
       }

@@ -10,8 +10,10 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapActions } from 'vuex';
+import AppRouteKeyupVue from './vueMixins/AppRouteKeyup.vue';
 
 export default defineComponent({
+  mixins: [AppRouteKeyupVue],
   name: 'App',
   created() {
     this.getTasks();
