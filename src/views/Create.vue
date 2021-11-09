@@ -9,7 +9,7 @@ import { defineComponent } from 'vue';
 import TaskCreate from '@/components/TaskCreate.vue';
 
 export default defineComponent({
-  name: 'Tasks',
+  name: 'Create',
   components: {
     TaskCreate,
   },

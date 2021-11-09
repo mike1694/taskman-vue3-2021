@@ -1,5 +1,5 @@
 <template>
-  <div id="nav">
+  <div id="nav" class="mb2">
     <router-link to="/">Задачи</router-link> |
     <router-link to="/create">Создать задачу</router-link> |
     <router-link to="/diary">История</router-link>

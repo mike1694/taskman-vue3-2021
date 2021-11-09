@@ -8,33 +8,19 @@
         @click="$emit('click', item.id)"
         :disabled="!item.reopen && item.closed">
       <div class="task-item__label">{{ item.label }}</div>
-      <div v-if="item.type === 'hot'" class="task-item__end-date text-right">
+      <div v-if="item.type === 'hot'" class="task-item__end-date info-label">
         {{ getEndDate }}
       </div>
     </label>
 
     <div class="task-item__content">
       <div v-if="showInfo && item.info"
-        class="text-left mb-2 task-item__info-block"
-        style="
-          font-size: 12px;
-          padding: 5px;
-          margin: 0;
-        "
-        show
-        variant="primary">
+        class="text-left task-item__info-block primary-label">
             <b>Описание:</b> {{ item.info }}
       </div>
 
       <div v-if="item.closed && item.result"
-        class="text-left"
-        style="
-          font-size: 12px;
-          padding: 5px;
-          margin: 0;
-        "
-        show
-        variant="success">
+        class="text-left task-item__result success-label">
             <b>Итог:</b> {{ item.result }}
       </div>
         
@@ -42,7 +28,7 @@
         :item="item">
       </task-timer> -->
 
-      <div class="date-block"
+      <div class="task-item__date-block"
         v-if="showDate">
         {{ getCreatedDate }}
       </div>
@@ -52,6 +38,7 @@
 
 <script lang="ts">
 import ITaskItem from '@/types/ITaskItem';
+import IDateOptions from '@/types/IDateOptions';
 import { defineComponent, PropType } from 'vue';
 import {mapGetters} from 'vuex';
 
@@ -91,10 +78,17 @@ export default defineComponent({
       let maxDate = new Date(
           this.item.maxDate + ' ' + (this.item.maxTime || '00:00')
       );
-      let date = maxDate.toLocaleDateString();
-      let time = maxDate.toLocaleTimeString().split(':');
+      let options: IDateOptions = {
+        weekday: 'long',
+        day: 'numeric',
+        // year: 'numeric',
+        month: 'long',
+        hour: 'numeric',
+        minute: 'numeric'
+      };
 
-      return `${date} ${time[0]}:${time[1]}`;
+      return new Intl.DateTimeFormat(undefined, options)
+        .format(maxDate);
     }
   }
 })
@@ -115,20 +109,8 @@ export default defineComponent({
   min-height: 30px;
 }
 
-.task-item__content .info-block {
-  color: #28a745;
-  text-align: justify;
-  font-size: 14px;
-}
-
 .task-item__label {
   flex-grow: 2;
-}
-
-.task-item__end-date {
-  color: gray;
-  font-size: 12px;
-  width: 150px;
 }
 
 .task-item__container {
@@ -144,16 +126,16 @@ export default defineComponent({
   margin-right: 5px;
 }
 
-.date-block  {
+.task-item__date-block  {
   color: lightgray;
   font-weight: bold;
   font-size: 12px;
   text-align: right;
 }
 
-.task-item__info-block {
-  font-size: 12px;
+.task-item__info-block,
+.task-item__result {
+  margin-top: 5px;
   padding: 5px;
-  margin: 0;
 }
 </style>

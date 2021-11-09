@@ -1,6 +1,6 @@
 <template>
   <div :class="className">
-    <h5 class="mb-4 mt-4" v-show="data.length">
+    <h5 class="mb2 mt2" v-show="data.length">
       <div class="info-title">
         {{ title }}: {{ data.length }}
       </div>
@@ -72,7 +72,7 @@ export default defineComponent({
     ...mapActions('tasks', {
       updateTask: 'upd_task',
     }),
-    editTask(item: any) {
+    editTask(item: ITaskItem) {
       this.updateTask(item);
     },
     editOnClick(id: number, e: any) {
@@ -96,7 +96,7 @@ export default defineComponent({
     handleClick(id: number) {
       let res = null;
       
-      this.tasks.forEach((i: any) => {
+      this.tasks.forEach((i: ITaskItem) => {
         if(i.id === id) {
           i.closed = !i.closed;
           i.closed_date = i.closed ? new Date().toISOString() : null;

@@ -5,7 +5,7 @@
         type="text"
         v-focus
         class="create-task-modal__header--input"
-        v-model="label"
+        v-model="form.label"
         autocomplete="off"
         placeholder="Название задачи">
     </div>
@@ -15,7 +15,7 @@
 
         <select
           class="mb2"
-          v-model="type">
+          v-model="form.type">
           <option v-for="item in typeOptions"
             :key="item.value"
             :value="item.value">
@@ -27,14 +27,14 @@
           <label class="mr2">
             <input class="text-left"
               type="checkbox"
-              v-model="reopen">
+              v-model="form.reopen">
               Переокрывать
           </label>
 
-          <label v-if="maxTime">
+          <label v-if="form.maxTime">
             <input class="text-left"
               type="checkbox"
-              v-model="timer"
+              v-model="form.timer"
             >
               Таймер
           </label>
@@ -44,20 +44,20 @@
       <div class="mb2 flex">
         <input type="date"
           class="mb2"
-          v-model="maxDate"
-          :disabled="type !== 'hot'"
+          v-model="form.maxDate"
+          :disabled="form.type !== 'hot'"
         >
         <input class="ml2"
           type="time"
-          v-model="maxTime"
-          :disabled="!maxDate || type !== 'hot'"
+          v-model="form.maxTime"
+          :disabled="!form.maxDate || form.type !== 'hot'"
         >
       </div>
     </div>
     
     <div class="mb2">
       <textarea
-        v-model="info"
+        v-model="form.info"
         placeholder="Описание"
         class="create-task-modal__header--textarea"
         rows="3"
@@ -65,9 +65,9 @@
       </textarea>
     </div>
 
-    <div class="mb2" v-if="modelValue.closed">
+    <div class="mb2" v-if="form.closed">
       <textarea
-        v-model="result"
+        v-model="form.result"
         placeholder="Результат"
         class="create-task-modal__header--textarea"
         rows="3"
@@ -91,44 +91,27 @@ export default defineComponent({
   },
   data() {
     return {
+      form: this.modelValue || {
+        label: '',
+        type: 'normal',
+        timer: false,
+        info: null,
+        reopen: true,
+        maxDate: null,
+        maxTime: null,
+      },
       typeOptions: [
         { value: 'normal', text: 'Обычная' },
         { value: 'hot', text: 'Срочная' },
       ]
     }
   },
-  computed: {
-    label: {
-      get: function() {return this.modelValue.label; },
-      set(val: string) {this.$emit('update:modelValue', {...this.modelValue, label: val});}
-    },
-    type: {
-      get: function() {return this.modelValue.type; },
-      set(val: string) {this.$emit('update:modelValue', {...this.modelValue, type: val});}
-    },
-    timer: {
-      get: function() {return this.modelValue.timer; },
-      set(val: boolean) {this.$emit('update:modelValue', {...this.modelValue, timer: val});}
-    },
-    maxTime: {
-      get: function() {return this.modelValue.maxTime; },
-      set(val: string | null) {this.$emit('update:modelValue', {...this.modelValue, maxTime: val});}
-    },
-    maxDate: {
-      get: function() {return this.modelValue.maxDate; },
-      set(val: string | null) {this.$emit('update:modelValue', {...this.modelValue, maxDate: val});}
-    },
-    info: {
-      get: function() {return this.modelValue.info; },
-      set(val: string) {this.$emit('update:modelValue', {...this.modelValue, info: val});}
-    },
-    result: {
-      get: function() {return this.modelValue.result; },
-      set(val: string) {this.$emit('update:modelValue', {...this.modelValue, result: val});}
-    },
-    reopen: {
-      get: function() {return this.modelValue.reopen; },
-      set(val: boolean) {this.$emit('update:modelValue', {...this.modelValue, reopen: val});}
+  watch: {
+    form: {
+      handler: function(val) {
+        this.$emit('update:modelValue', val);
+      },
+      deep: true
     },
   }
 });

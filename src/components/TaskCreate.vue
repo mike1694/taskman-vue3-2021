@@ -47,6 +47,12 @@ export default defineComponent({
       }
     }
   },
+  mounted() {
+    document.body.addEventListener('keyup', this.keyupHandler);
+  },
+  beforeUnmount() {
+    document.body.addEventListener('keyup', this.keyupHandler);
+  },
   computed: {
     ...mapGetters('tasks', {
       tasks: 'get_all_tasks'
@@ -59,50 +65,53 @@ export default defineComponent({
     addTask() {
       if(!this.vmodel.label) return undefined;
 
-      let res: ITaskItem[] = [...this.tasks, {
-        label: this.vmodel.label,
-        type: this.vmodel.type,
-        created: new Date().toISOString(),
-        closed: false,
-        id: Date.now(),
-        info: this.vmodel.info,
-        reopen: this.vmodel.reopen,
-        maxDate: this.vmodel.maxDate,
-        maxTime: this.vmodel.maxTime,
-        timer: this.vmodel.timer
-      }];
+      let res: ITaskItem[] = [
+        ...this.tasks,
+        {
+          ...this.vmodel,
+          created: new Date().toISOString(),
+          closed: false,
+          id: Date.now()
+        }
+      ];
 
       this.updateTasks(res);
-      // this.$bvModal.hide('create-task-modal');
+      this.$router.push('/');
     },
-    inputTaskForm(i: any) {
-      console.log(i, 'i');
-      this.vmodel = i;
-    },
-    resetModal() {
-      for (let key in this.vmodel) {
-        switch(key) {
-          case 'label':
-          case 'info':
-            this.vmodel[key] = '';
-            break;
-          case 'timer':
-            this.vmodel[key] = false;
-            break;
-          case 'reopen':
-            this.vmodel[key] = true;
-            break;
-          case 'type':
-            this.vmodel[key] = 'normal';
-            break;
-          case 'maxDate':
-          case 'maxTime':
-            this.vmodel[key] = null;
-            break;
-        }
+    keyupHandler(e: any) {
+      if(this.$route.path !== '/create') {
+        return undefined;
+      }
+
+      console.log(e.code, e.target.tagName, 'e.code');
+
+      switch(e.code) {
+        case 'Escape':
+          this.$router.push('/');
+          break;
+        case 'NumpadEnter':
+        case 'Enter':
+          if(e.target.tagName === "TEXTAREA") {
+            return undefined;
+          }
+          this.addTask();
+          break;
+        case 'NumpadAdd':
+        case 'Equal':
+          break;
       }
     },
-    
+    resetModal(): void {
+      this.vmodel.type = 'normal';
+      this.vmodel.label = '';
+      this.vmodel.info = '';
+      this.vmodel.reopen = true;
+      this.vmodel.maxDate = null;
+      this.vmodel.maxTime = null;
+      this.vmodel.timer = false;
+
+      this.$router.push('/');
+    }
   }
 })
 </script>
