@@ -28,13 +28,13 @@ export default defineComponent({
         case 'Escape':
           this.resetEditTask();
           break;
-        case 'NumpadEnter':
-        case 'Enter':
-          break;
-        case 'NumpadAdd':
-        case 'Equal':
-          this.$router.push('/create');
-          break;
+        // case 'NumpadEnter':
+        // case 'Enter':
+        //   break;
+        // case 'NumpadAdd':
+        // case 'Equal':
+        //   this.$router.push('/create');
+          // break;
       }
     }
   }

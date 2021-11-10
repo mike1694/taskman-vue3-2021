@@ -2,7 +2,7 @@
   <div id="nav" class="mb2">
     <router-link to="/">Задачи</router-link> |
     <router-link to="/create">Создать задачу</router-link> |
-    <router-link to="/diary">История</router-link>
+    <router-link to="/history">История</router-link>
   </div>
   <!-- <div class="wallpaper"></div> -->
   <router-view/>
@@ -17,10 +17,14 @@ export default defineComponent({
   name: 'App',
   created() {
     this.getTasks();
+    this.getHistory();
   },
   methods: {
     ...mapActions('tasks', {
       getTasks: 'get_tasks'
+    }),
+    ...mapActions('history', {
+      getHistory: 'get_history'
     })
   }
 });

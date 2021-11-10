@@ -38,7 +38,7 @@
 
 <script lang="ts">
 import ITaskItem from '@/types/ITaskItem';
-import IDateOptions from '@/types/IDateOptions';
+import {getFormatDateTime} from '@/api/date_time_format';
 import { defineComponent, PropType } from 'vue';
 import {mapGetters} from 'vuex';
 
@@ -75,20 +75,11 @@ export default defineComponent({
       }
     },
     getEndDate: function(): string {
-      let maxDate = new Date(
+      let date = new Date(
           this.item.maxDate + ' ' + (this.item.maxTime || '00:00')
       );
-      let options: IDateOptions = {
-        weekday: 'long',
-        day: 'numeric',
-        // year: 'numeric',
-        month: 'long',
-        hour: 'numeric',
-        minute: 'numeric'
-      };
 
-      return new Intl.DateTimeFormat(undefined, options)
-        .format(maxDate);
+      return getFormatDateTime(date);
     }
   }
 })

@@ -2,6 +2,7 @@ import { createStore } from 'vuex';
 
 import tasks from './tasks';
 import task_settings from './task_settings';
+import history from './history';
 
 export default createStore({
   state: {
@@ -14,6 +15,7 @@ export default createStore({
   },
   modules: {
     tasks,
-    task_settings
+    task_settings,
+    history
   }
 })

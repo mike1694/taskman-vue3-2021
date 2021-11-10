@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import Tasks from '../views/Tasks.vue';
 import Create from '../views/Create.vue';
-import Diary from '../views/Diary.vue';
+import History from '../views/History.vue';
 import TaskCreate from '@/components/TaskCreate.vue';
 
 const routes: Array<RouteRecordRaw> = [
@@ -16,12 +16,12 @@ const routes: Array<RouteRecordRaw> = [
     component: Create
   },
   {
-    path: '/diary',
-    name: 'Diary',
+    path: '/history',
+    name: 'History',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Diary.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/History.vue')
   }
 ]
 

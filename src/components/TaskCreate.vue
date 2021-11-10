@@ -6,8 +6,8 @@
       v-model="vmodel">
     </task-form>
 
-    <button class="mr2" @click="addTask">Ок</button>
-    <button @click="resetModal">Отмена</button>
+    <button class="mr2 p5" @click="addTask">Ок</button>
+    <button class="p5" @click="resetModal">Отмена</button>
   </div>
 </template>
 
@@ -83,12 +83,10 @@ export default defineComponent({
         return undefined;
       }
 
-      console.log(e.code, e.target.tagName, 'e.code');
-
       switch(e.code) {
-        case 'Escape':
-          this.$router.push('/');
-          break;
+        // case 'Escape':
+        //   this.$router.push('/');
+        //   break;
         case 'NumpadEnter':
         case 'Enter':
           if(e.target.tagName === "TEXTAREA") {
@@ -96,9 +94,9 @@ export default defineComponent({
           }
           this.addTask();
           break;
-        case 'NumpadAdd':
-        case 'Equal':
-          break;
+        // case 'NumpadAdd':
+        // case 'Equal':
+        //   break;
       }
     },
     resetModal(): void {
