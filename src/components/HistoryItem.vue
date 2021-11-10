@@ -71,7 +71,7 @@ export default defineComponent({
         ...dateOptions,
         year: 'numeric'
       });
-    }
+    },
   },
   methods: {
     ...mapMutations('history', {
@@ -119,6 +119,10 @@ export default defineComponent({
   .history-item__text {
     font-size: 14px;
     line-height: 16px;
+  }
+
+  .history-item__title {
+    color: #2c3e50c2;
   }
   
   .history-item__path {

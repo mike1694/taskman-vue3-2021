@@ -1,7 +1,5 @@
 <template>
   <div class="history">
-    <h4>История</h4>
-
     <HistoryComponent />
   </div>
 </template>

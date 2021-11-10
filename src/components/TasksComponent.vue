@@ -1,5 +1,5 @@
 <template>
-  <div class="tasks-component">
+  <div class="tasks-component mb4">
     <div class="tasks-content"
       :style="{'flex-direction': tasksDirection ? 'row' : 'column'}">
       <task-list
