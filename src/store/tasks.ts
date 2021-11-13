@@ -5,26 +5,26 @@ const URL = 'http://localhost:3000';
 export default {
   namespaced: true,
   state: {
-    tasks: [],
-    edit_task: null
+    tasks: [] as ITaskItem[],
+    edit_task: null as null | number
   },
   mutations: {
-    set_all_tasks: (state: any, payload: any) => state.tasks = payload,
+    set_all_tasks: (state: any, payload: ITaskItem[]) => state.tasks = payload,
     create_task: (state: any, payload: ITaskItem) => state.tasks = [...state.tasks, payload],
-    set_updated_task: (state: any, payload: any) => state.tasks =
-      state.tasks.map((i: any) => payload.id === i.id ? payload : i),
-    toggle_edit_task: (state: any, payload: string) => state.edit_task =
+    set_updated_task: (state: any, payload: ITaskItem) => state.tasks =
+      state.tasks.map((i: ITaskItem) => payload.id === i.id ? payload : i),
+    toggle_edit_task: (state: any, payload: number | null) => state.edit_task =
       state.edit_task === payload ? null : payload,
     reset_edit_task: (state: any) => state.edit_task = null
   }, 
   getters: {
-    get_all_tasks: (state: any): [] => state.tasks,
+    get_all_tasks: (state: any): ITaskItem[] => state.tasks,
     get_edit_task: (state: any): number | null => state.edit_task,
   },
   actions: {
     get_tasks: (context: any) => {
       fetch_get(URL)
-      .then((response: any) => {
+      .then((response: ITaskItem[]) => {
         context.commit('set_all_tasks', response);
       })
     },
@@ -36,13 +36,13 @@ export default {
           action: '/task/create'
         }
       })
-      .then((status: any) => {
+      .then((status: string) => {
         if(status) {
           context.commit('create_task', payload);
         }
       });
     },
-    upd_task: (context: any, payload: any) => {
+    upd_task: (context: any, payload: ITaskItem) => {
       fetch_post({
         url: URL,
         payload: {
@@ -50,7 +50,7 @@ export default {
           action: '/task/update'
         }
       })
-      .then((status: any) => {
+      .then((status: string) => {
         if(status) {
           context.commit('set_updated_task', payload);
         }

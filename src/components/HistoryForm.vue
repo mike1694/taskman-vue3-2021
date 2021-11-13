@@ -54,7 +54,7 @@ import { defineComponent, PropType } from 'vue';
 import IHistoryItem from '@/types/IHistoryItem';
 
 export default defineComponent({
-  name: 'TaskForm',
+  name: 'HistoryForm',
   props: {
     modelValue: {
       type: Object as PropType<IHistoryItem>,

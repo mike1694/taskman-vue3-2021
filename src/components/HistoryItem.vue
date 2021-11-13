@@ -8,7 +8,7 @@
       </div>
       
       <div class="history-item__year flex-center">
-        <button class="p2 mr2" @click="toggleEditHistory(item.id)">edit</button>
+        <button class="p2 mr2" @click="edit">edit</button>
         <span class="info-label p4">{{ item.year }}</span>
       </div>
     </div>
@@ -60,6 +60,9 @@ export default defineComponent({
       copied: false
     }
   },
+  created() {
+    this.toggleHistoryCreate(false);
+  },
   computed: {
     ...mapGetters('history', {
       getEditHistory: 'get_edit_history',
@@ -75,10 +78,15 @@ export default defineComponent({
   },
   methods: {
     ...mapMutations('history', {
-      toggleEditHistory: 'toggle_edit_history'
+      toggleEditHistory: 'toggle_edit_history',
+      toggleHistoryCreate: 'toggle_history_create'
     }),
     submit(): void {
       // 
+    },
+    edit() {
+      this.toggleEditHistory(this.item.id);
+      this.toggleHistoryCreate(false);
     },
     cancel(): void {
       this.toggleEditHistory(this.item.id);

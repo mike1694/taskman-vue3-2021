@@ -72,8 +72,6 @@ export default defineComponent({
         id: Date.now()
       };
 
-      debugger;
-
       this.createTask(res);
       this.$router.push('/');
     },
