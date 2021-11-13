@@ -44,6 +44,9 @@ import { defineComponent } from 'vue';
 import TaskList from '@/components/TaskList.vue';
 import { mapGetters } from 'vuex';
 
+import ITaskItem from '@/types/ITaskItem';
+import ITasksObject from '@/types/ITasksObject';
+
 export default defineComponent({
   name: 'TasksComponent',
   components: {TaskList},
@@ -59,7 +62,7 @@ export default defineComponent({
     isAllFinished: function(): boolean {
       return this.finishedTasks.length === this.tasks.length;
     },
-    AllTasks: function(): any {
+    AllTasks: function(): ITasksObject {
       let opened = [];
       let closed = [];
 
@@ -73,10 +76,10 @@ export default defineComponent({
 
       return {opened, closed};
     },
-    hotTasks: function(): [] {
+    hotTasks: function(): ITaskItem[] {
       return this.AllTasks.opened
-        .filter((i: any) => i.type === 'hot')
-        .sort((a: any, b: any): number => {
+        .filter((i) => i.type === 'hot')
+        .sort((a, b): number => {
           let now = new Date();
           let endA = new Date(a.maxDate + ' ' + a.maxTime);
           let endB = new Date(b.maxDate + ' ' + b.maxTime);
@@ -86,28 +89,21 @@ export default defineComponent({
           return diffDateA - diffDateB;
         });
     },
-    currentTasks: function(): [] {
-      return this.AllTasks.opened.filter((i: any) => i.type === 'normal');
+    currentTasks: function(): ITaskItem[] {
+      return this.AllTasks.opened.filter((i) => i.type === 'normal');
     },
-    finishedTasks: function(): [] {
+    finishedTasks: function(): ITaskItem[] {
       return this.AllTasks.closed;
     },
-    finishedTasksByDate: function(): any {
-      interface FinisheSortedTasks {
-        [key: string]: any
-      }
-      interface FinishedSort {
-        closed_date: string,
-      }
+    finishedTasksByDate: function(): ITasksObject {
+      let res: ITasksObject = {};
 
-      let res: FinisheSortedTasks = {};
-
-      [...this.finishedTasks]
-      .sort((a: FinishedSort, b: FinishedSort) =>
-        new Date(b.closed_date).getTime() - new Date(a.closed_date).getTime()
+      [...this.finishedTasks as ITaskItem[]]
+      .sort((a, b) =>
+        new Date(b.closed_date as string).getTime() - new Date(a.closed_date as string).getTime()
       )
-      .forEach((item: FinishedSort) => {
-        let date: string = new Date(item.closed_date).toLocaleDateString();
+      .forEach((item: ITaskItem) => {
+        let date: string = new Date(item.closed_date as string).toLocaleDateString();
 
         if(date in res) {
             res[date].push(item);

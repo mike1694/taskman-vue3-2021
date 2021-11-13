@@ -42,16 +42,20 @@
           
       </div>
       <div class="mb2 flex">
-        <input type="date"
-          class="mb2"
-          v-model="form.maxDate"
-          :disabled="form.type !== 'hot'"
-        >
-        <input class="ml2"
-          type="time"
-          v-model="form.maxTime"
-          :disabled="!form.maxDate || form.type !== 'hot'"
-        >
+        <div class="w100 mr2">
+          <input type="date"
+            v-model="form.maxDate"
+            :disabled="form.type !== 'hot'"
+          >
+        </div>
+        
+        <div class="w100">
+          <input
+            type="time"
+            v-model="form.maxTime"
+            :disabled="!form.maxDate || form.type !== 'hot'"
+          >
+        </div>
       </div>
     </div>
     

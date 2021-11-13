@@ -10,5 +10,5 @@ export default interface ITaskItem {
   timer: boolean,
   closed?: boolean,
   result?: string,
-  closed_date?: string | null
+  closed_date?: string | null | undefined
 };

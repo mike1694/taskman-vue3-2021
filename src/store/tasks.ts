@@ -1,4 +1,5 @@
 import { fetch_post, fetch_get } from "@/api/fetch_api";
+import ITaskItem from "@/types/ITaskItem";
 const URL = 'http://localhost:3000';
 
 export default {
@@ -9,6 +10,7 @@ export default {
   },
   mutations: {
     set_all_tasks: (state: any, payload: any) => state.tasks = payload,
+    create_task: (state: any, payload: ITaskItem) => state.tasks = [...state.tasks, payload],
     set_updated_task: (state: any, payload: any) => state.tasks =
       state.tasks.map((i: any) => payload.id === i.id ? payload : i),
     toggle_edit_task: (state: any, payload: string) => state.edit_task =
@@ -26,17 +28,17 @@ export default {
         context.commit('set_all_tasks', response);
       })
     },
-    upd_all_tasks: (context: any, payload: any) => {
+    create_task: (context: any, payload: ITaskItem) => {
       fetch_post({
         url: URL,
         payload: {
           body: payload,
-          action: '/'
+          action: '/task/create'
         }
       })
       .then((status: any) => {
         if(status) {
-          context.commit('set_all_tasks', payload);
+          context.commit('create_task', payload);
         }
       });
     },
@@ -45,7 +47,7 @@ export default {
         url: URL,
         payload: {
           body: payload,
-          action: '/update'
+          action: '/task/update'
         }
       })
       .then((status: any) => {

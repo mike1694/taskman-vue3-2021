@@ -60,22 +60,21 @@ export default defineComponent({
   },
   methods: {
     ...mapActions('tasks', {
-      updateTasks: 'upd_all_tasks'
+      createTask: 'create_task'
     }),
     addTask() {
       if(!this.vmodel.label) return undefined;
 
-      let res: ITaskItem[] = [
-        ...this.tasks,
-        {
-          ...this.vmodel,
-          created: new Date().toISOString(),
-          closed: false,
-          id: Date.now()
-        }
-      ];
+      let res: ITaskItem = {
+        ...this.vmodel,
+        created: new Date().toISOString(),
+        closed: false,
+        id: Date.now()
+      };
 
-      this.updateTasks(res);
+      debugger;
+
+      this.createTask(res);
       this.$router.push('/');
     },
     keyupHandler(e: any) {

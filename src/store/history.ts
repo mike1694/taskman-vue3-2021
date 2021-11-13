@@ -32,7 +32,7 @@ export default {
         url: URL,
         payload: {
           body: payload,
-          action: '/update/history'
+          action: '/history/update'
         }
       })
       .then((status: any) => {
