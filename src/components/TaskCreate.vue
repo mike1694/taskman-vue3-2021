@@ -23,14 +23,14 @@ export default defineComponent({
   data() {
     return {
       vmodel: {
-        type: 'normal' as string,
-        label: '' as string,
-        info: '' as string,
-        reopen: true as boolean,
-        maxDate: null as string | null,
-        maxTime: null as string | null,
-        timer: false as boolean
-      }
+        type: 'normal',
+        label: '',
+        info: '',
+        reopen: true,
+        maxDate: null,
+        maxTime: null,
+        timer: false
+      } as ITaskItem
     };
   },
   watch: {
@@ -81,9 +81,9 @@ export default defineComponent({
       }
 
       switch(e.code) {
-        // case 'Escape':
-        //   this.$router.push('/');
-        //   break;
+        case 'Escape':
+          this.$router.push('/');
+          break;
         case 'NumpadEnter':
         case 'Enter':
           if(e.target.tagName === "TEXTAREA") {

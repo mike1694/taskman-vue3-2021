@@ -25,13 +25,13 @@ export default defineComponent({
   data() {
     return {
       vmodel: {
-        type: 'log' as string,
-        label: '' as string,
-        text: '' as string,
-        path: '' as string,
-        year: '' as string | number,
-        status: 'created' as string,
-      }
+        type: 'log',
+        label: '',
+        text: '',
+        path: '',
+        year: '',
+        status: 'created',
+      } as IHistoryItem
     };
   },
   created() {
@@ -77,15 +77,18 @@ export default defineComponent({
       }
 
       switch(e.code) {
-        // case 'Escape':
-        //   this.$router.push('/');
-        //   break;
+        case 'Escape':
+          this.resetEditHistory();
+          this.reset();
+          // this.toggleHistoryCreate(false);
+          break;
         case 'NumpadEnter':
         case 'Enter':
           if(e.target.tagName === "TEXTAREA") {
             return undefined;
           }
           this.addHistory();
+          this.toggleHistoryCreate(false);
           break;
         // case 'NumpadAdd':
         // case 'Equal':

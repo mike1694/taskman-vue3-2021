@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default defineComponent({
   mounted() {
@@ -8,12 +9,20 @@ export default defineComponent({
   beforeUnmount() {
     document.body.addEventListener('keyup', this.keyupHandler);
   },
+  computed: {
+    ...mapGetters('history', {
+
+    })
+  },
   methods: {
+    ...mapMutations('history', {
+
+    }),
     keyupHandler(e: any) {
-      if(e.target.tagName === "INPUT" && e.code !== 'Escape') {
+      if(e.target.tagName === "INPUT" && e.code === 'Escape') {
         return undefined;
       }
-      if(e.target.tagName === "TEXTAREA" && e.code !== 'Escape') {
+      if(e.target.tagName === "TEXTAREA" && e.code === 'Escape') {
         return undefined;
       }
 

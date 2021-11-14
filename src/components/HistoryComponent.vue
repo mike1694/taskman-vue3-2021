@@ -11,7 +11,7 @@
       v-if="showHistoryCreate">
     </history-create>
 
-    <div class="history-list">
+    <div class="history-list mb4">
       <history-item
         v-for="(item, key) in historySorted"
         :item="item"

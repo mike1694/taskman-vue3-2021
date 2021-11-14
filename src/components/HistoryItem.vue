@@ -2,25 +2,32 @@
 
 <template>
   <div class="history-item" v-if="item.id !== getEditHistory">
-    <div class="history-item__header flex-space mb2">
+    <div class="history-item__header flex-space">
       <div class="history-item__title">
-        <h4>{{ item.label ? item.label + ' - ' : '' }}{{ date }}</h4>
+        <span class="bold">{{ date }}</span>
       </div>
       
       <div class="history-item__year flex-center">
-        <button class="p2 mr2" @click="edit">edit</button>
-        <span class="info-label p4">{{ item.year }}</span>
+        <span class="info-label p4 mr2" v-if="item.year">
+          {{ item.year }}
+        </span>
+        <button class="p2" @click="edit">edit</button>
       </div>
     </div>
+    <h5 class="mb2">{{ item.label ? item.label : '' }}</h5>
     
-    <div class="history-item__text text-left primary-label mb2">
+    <div class="history-item__text text-left primary-label mb2"
+      v-if="item.text">
       {{ item.text }}
     </div>
 
     <div class="history-item__path text-left flex-v-center"
+      v-if="item.path"
       @click="copyPathText"
       title="Скопировать путь">
-      <span class="bold">Путь:&nbsp;</span>{{ item.path }} 
+      <span class="bold">
+        Путь:&nbsp;
+      </span>{{ item.path }} 
       <transition name="fade">
         <span class="ml2 success-label" v-if="copied">
           Путь скопирован!
@@ -43,7 +50,7 @@
 import { defineComponent, PropType } from 'vue';
 import IHistoryItem from '@/types/IHistoryItem';
 import { getFormatDateTime, dateOptions } from '@/api/date_time_format';
-import { mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import HistoryForm from '@/components/HistoryForm.vue';
 
 export default defineComponent({
@@ -57,7 +64,15 @@ export default defineComponent({
   },
   data() {
     return {
-      copied: false
+      copied: false,
+      vmodel: {
+        type: 'log',
+        label: '',
+        text: '',
+        path: '',
+        year: '',
+        status: 'created'
+      } as IHistoryItem
     }
   },
   created() {
@@ -81,8 +96,11 @@ export default defineComponent({
       toggleEditHistory: 'toggle_edit_history',
       toggleHistoryCreate: 'toggle_history_create'
     }),
+    ...mapActions('history', {
+      updateHistory: 'upd_history'
+    }),
     submit(): void {
-      // 
+      this.updateHistory(this.vmodel);
     },
     edit() {
       this.toggleEditHistory(this.item.id);
@@ -91,8 +109,8 @@ export default defineComponent({
     cancel(): void {
       this.toggleEditHistory(this.item.id);
     },
-    editHistory(e: any): void {
-      console.log(e, 'e');
+    editHistory(e: IHistoryItem): void {
+      this.vmodel = e;
     },
 
     copyPathText() {
@@ -131,6 +149,7 @@ export default defineComponent({
 
   .history-item__title {
     color: #2c3e50c2;
+    font-size: 12px;
   }
   
   .history-item__path {

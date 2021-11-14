@@ -51,7 +51,7 @@ export default {
         }
       });
     },
-    upd_history: (context: any, payload: any) => {
+    upd_history: (context: any, payload: IHistoryItem) => {
       fetch_post({
         url: URL,
         payload: {

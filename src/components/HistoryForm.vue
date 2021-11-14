@@ -63,7 +63,7 @@ export default defineComponent({
   },
   data() {
     return {
-      form: this.modelValue || {
+      form: {...this.modelValue} || {
         type: 'log',
         label: '',
         text: '',
