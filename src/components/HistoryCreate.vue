@@ -15,9 +15,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import HistoryForm from '@/components/HistoryForm.vue';
 import IHistoryItem from '@/types/IHistoryItem';
+import {getDateNow} from '@/api/date_now';
 
 export default defineComponent({
   name: 'HistoryCreate',
@@ -29,10 +30,21 @@ export default defineComponent({
         label: '',
         text: '',
         path: '',
-        year: '',
-        status: 'created',
+        date: getDateNow(),
+        song_length: '',
+        status: 'in_process',
       } as IHistoryItem
     };
+  },
+  watch: {
+    'vmodel.path': function(path) {
+      // create date project autocomplete
+      let item = this.history.find((i: IHistoryItem) => i.path === path);
+
+      if(item) {
+        this.vmodel.date = item.date;
+      }
+    }
   },
   created() {
     this.resetEditHistory();
@@ -42,6 +54,11 @@ export default defineComponent({
   },
   beforeUnmount() {
     document.body.addEventListener('keyup', this.keyupHandler);
+  },
+  computed: {
+    ...mapGetters('history', {
+      history: 'get_all_history'
+    })
   },
   methods: {
     ...mapActions('history', {
@@ -66,8 +83,9 @@ export default defineComponent({
       this.vmodel.label = '';
       this.vmodel.text = '';
       this.vmodel.path = '';
-      this.vmodel.year = '';
-      this.vmodel.status = 'created';
+      this.vmodel.date = getDateNow();
+      this.vmodel.song_length = '';
+      this.vmodel.status = 'in_process';
 
       this.toggleHistoryCreate(false);
     },

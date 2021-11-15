@@ -4,7 +4,8 @@ export default interface IHistoryItem {
   label: string,
   text: string,
   path: string,
-  year: string | number,
+  date: string,
+  song_length?: string,
   status: string,
   created: string
 };

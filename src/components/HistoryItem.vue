@@ -7,9 +7,16 @@
         <span class="bold">{{ date }}</span>
       </div>
       
-      <div class="history-item__year flex-center">
-        <span class="info-label p4 mr2" v-if="item.year">
-          {{ item.year }}
+      <div class="history-item__length flex-center">
+        <span class="info-label p4 mr2"
+          v-if="item.song_length"
+          title="Продолжительность">
+          {{ item.song_length }}
+        </span>
+        <span class="info-label p4 mr2"
+          v-if="item.date"
+          title="Дата создания">
+          {{ new Date(item.date + ' 00:00').toLocaleDateString() }}
         </span>
         <button class="p2" @click="edit">edit</button>
       </div>
@@ -70,7 +77,8 @@ export default defineComponent({
         label: '',
         text: '',
         path: '',
-        year: '',
+        date: '',
+        song_length: '',
         status: 'created'
       } as IHistoryItem
     }
@@ -94,13 +102,15 @@ export default defineComponent({
   methods: {
     ...mapMutations('history', {
       toggleEditHistory: 'toggle_edit_history',
-      toggleHistoryCreate: 'toggle_history_create'
+      toggleHistoryCreate: 'toggle_history_create',
+      resetHistoryItem: 'reset_edit_history'
     }),
     ...mapActions('history', {
       updateHistory: 'upd_history'
     }),
     submit(): void {
       this.updateHistory(this.vmodel);
+      this.resetHistoryItem();
     },
     edit() {
       this.toggleEditHistory(this.item.id);

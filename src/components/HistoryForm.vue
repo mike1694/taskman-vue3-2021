@@ -10,23 +10,6 @@
         placeholder="Заголовок">
     </div>
 
-    <div class="flex mb2">
-      <select class="mr2"
-        v-model="form.status">
-        <option v-for="item in typeOptions"
-          :key="item.value"
-          :value="item.value">
-          {{ item.text }}
-        </option>
-      </select>
-
-      <input
-        type="text"
-        v-model="form.year"
-        autocomplete="off"
-        placeholder="Год проекта">
-    </div>
-
     <div class="mb2">
       <textarea
         v-model="form.text"
@@ -38,10 +21,36 @@
 
     <div class="mb2">
       <input
-          type="text"
-          v-model="form.path"
-          autocomplete="off"
-          placeholder="Папка проекта">
+        type="text"
+        v-model="form.path"
+        autocomplete="off"
+        placeholder="Папка проекта">
+    </div>
+
+    <div class="flex mb2">
+      <input
+        type="time"
+        v-model="form.song_length"
+        autocomplete="off"
+        title="Продолжительность"
+        placeholder="Продолжительность">
+
+      <select class="ml2"
+        v-model="form.status">
+        <option v-for="item in typeOptions"
+          :key="item.value"
+          :value="item.value">
+          {{ item.text }}
+        </option>
+      </select>
+
+      <input
+        class="ml2"
+        type="date"
+        v-model="form.date"
+        autocomplete="off"
+        title="Дата создания"
+        placeholder="Дата создания">
     </div>
 
     <button class="mr2 p5" @click="$emit('submit')">Ок</button>
@@ -68,9 +77,10 @@ export default defineComponent({
         label: '',
         text: '',
         path: '',
-        year: '',
-        status: 'created'
-      },
+        date: '',
+        song_length: '',
+        status: 'in_process'
+      } as IHistoryItem,
       typeOptions: [
         { value: 'created', text: 'Создано' },
         { value: 'in_process', text: 'В работе' },

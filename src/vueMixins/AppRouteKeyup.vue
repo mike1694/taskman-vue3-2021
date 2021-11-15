@@ -28,6 +28,12 @@ export default defineComponent({
 
       switch(e.code) {
         case 'KeyH':
+          if(e.target.tagName === "INPUT") {
+            return undefined;
+          }
+          if(e.target.tagName === "TEXTAREA") {
+            return undefined;
+          }
           this.$router.push('/history');
           break;
 
