@@ -1,3 +1,11 @@
 .w100 {
-  width: 100%;
+  width: 100% !important;
+}
+
+.w50 {
+  width: 50% !important;
+}
+
+.w30 {
+  width: 30% !important;
 }

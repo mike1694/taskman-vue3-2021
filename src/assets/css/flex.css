@@ -8,6 +8,16 @@
   align-items: center;
 }
 
+.flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.flex-50-item {
+  flex-basis: calc(30% - 10px) !important;
+  /* flex-grow: .5; */
+}
+
 .flex-h-center {
   display: flex;
   justify-content: center;
@@ -19,6 +29,11 @@
 }
 
 .flex-space {
+  display: flex;
+  justify-content: space-between;
+}
+
+.flex-between {
   display: flex;
   justify-content: space-between;
 }

@@ -132,6 +132,14 @@ export default defineComponent({
   opacity: .3;
 }
 
+@media screen and (max-width: 500px) {
+  ul {
+    li {
+      width: 220px !important;
+    }
+  }
+}
+
 ul {
   display: flex;
   flex-direction: column;
@@ -159,6 +167,7 @@ ul {
       position: relative;
     }
     .edit::after, .cancel::after {
+      overflow: hidden;
       content: '';
       font-size: 10px;
       background-size: 20px 20px;

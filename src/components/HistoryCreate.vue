@@ -121,4 +121,10 @@ export default defineComponent({
 .history-create {
   width: 500px;
 }
+
+@media screen and (max-width: 500px) {
+  .history-create {
+    width: 350px;
+  }
+}
 </style>

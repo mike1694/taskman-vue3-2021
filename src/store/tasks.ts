@@ -1,6 +1,6 @@
 import { fetch_post, fetch_get } from "@/api/fetch_api";
 import ITaskItem from "@/types/ITaskItem";
-const URL = 'http://localhost:3000';
+const URL = 'http://192.168.1.66:3000';
 
 export default {
   namespaced: true,

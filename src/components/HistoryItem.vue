@@ -153,6 +153,7 @@ export default defineComponent({
   }
 
   .history-item__text {
+    white-space: pre-wrap;
     font-size: 14px;
     line-height: 16px;
   }

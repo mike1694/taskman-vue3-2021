@@ -63,4 +63,10 @@ export default defineComponent({
 .history-list {
   width: 500px;
 }
+
+@media screen and (max-width: 500px) {
+  .history-list {
+    width: 350px;
+  }
+}
 </style>

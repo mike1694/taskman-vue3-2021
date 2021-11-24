@@ -27,30 +27,37 @@
         placeholder="Папка проекта">
     </div>
 
-    <div class="flex mb2">
-      <input
-        type="time"
-        v-model="form.song_length"
-        autocomplete="off"
-        title="Продолжительность"
-        placeholder="Продолжительность">
-
-      <select class="ml2"
-        v-model="form.status">
-        <option v-for="item in typeOptions"
-          :key="item.value"
-          :value="item.value">
-          {{ item.text }}
-        </option>
-      </select>
-
-      <input
-        class="ml2"
-        type="date"
-        v-model="form.date"
-        autocomplete="off"
-        title="Дата создания"
-        placeholder="Дата создания">
+    <div class="flex flex-wrap flex-between">
+      <div class="flex-50-item">
+        <input
+          type="time"
+          class="mb2"
+          v-model="form.song_length"
+          autocomplete="off"
+          title="Продолжительность"
+          placeholder="Продолжительность">
+      </div>
+      
+      <div class="flex-50-item">
+        <select class="mb2"
+          v-model="form.status">
+          <option v-for="item in typeOptions"
+            :key="item.value"
+            :value="item.value">
+            {{ item.text }}
+          </option>
+        </select>
+      </div>
+      
+      <div class="flex-50-item">
+        <input
+          class="mb2"
+          type="date"
+          v-model="form.date"
+          autocomplete="off"
+          title="Дата создания"
+          placeholder="Дата создания">
+      </div>
     </div>
 
     <button class="mr2 p5" @click="$emit('submit')">Ок</button>
@@ -109,4 +116,6 @@ export default defineComponent({
     padding: 10px;
     background-color: #f5f5f5;
   }
+  /* @media screen and (max-width: 500px) {
+  } */
 </style>
