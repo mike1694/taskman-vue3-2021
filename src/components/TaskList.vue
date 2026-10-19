@@ -14,6 +14,10 @@
             @click="editOnClick(item.id, $event)">
         </div>
 
+        <div class="task-list__delete" @click="deleteTask(item.id)">
+          ×
+        </div>
+
         <div  v-if="getEditTask === item.id">
           <h5 class="mb2">Редактирование задачи</h5>
           <task-form
@@ -32,6 +36,14 @@
         </task-item>
       </li>
     </transition-group>
+
+    <confirm-dialog
+      :visible="!!getConfirmDelete"
+      :message="'Удалить задачу #' + getConfirmDelete + '?'"
+      @confirm="confirmDelete"
+      @cancel="cancelDelete"
+    >
+    </confirm-dialog>
   </div>
 </template>
 
@@ -40,13 +52,15 @@ import { defineComponent, PropType } from 'vue';
 import { mapActions, mapMutations, mapGetters } from 'vuex';
 import TaskItem from '@/components/TaskItem.vue';
 import TaskForm from '@/components/TaskForm.vue';
+import ConfirmDialog from '@/components/ConfirmDialog.vue';
 import ITaskItem from '@/types/ITaskItem';
 
 export default defineComponent({
   name: 'TaskList',
   components: {
     TaskItem,
-    TaskForm
+    TaskForm,
+    ConfirmDialog
   },
   props: {
     title: String,
@@ -62,7 +76,8 @@ export default defineComponent({
   computed: {
     ...mapGetters('tasks', {
       getEditTask: 'get_edit_task',
-      tasks: 'get_all_tasks'
+      tasks: 'get_all_tasks',
+      getConfirmDelete: 'get_confirm_delete'
     })
   },
   methods: {
@@ -71,6 +86,9 @@ export default defineComponent({
     }),
     ...mapActions('tasks', {
       updateTask: 'upd_task',
+      deleteTask: 'delete_task',
+      confirmDelete: 'confirm_delete_task',
+      cancelDelete: 'cancel_delete_task'
     }),
     editTask(item: ITaskItem) {
       this.updateTask(item);
@@ -157,6 +175,7 @@ ul {
     width: 350px;
     // box-shadow: 2px 2px 2px #d3d3d361;
     background-color: #f5f5f5;
+    position: relative;
 
     &.edit-task {
       box-shadow: 0px 0px 10px #d4edda;
@@ -165,6 +184,27 @@ ul {
 
     .edit, .cancel {
       position: relative;
+    }
+    .task-list__delete {
+      position: absolute;
+      right: -12px;
+      top: 0;
+      transform: translateY(-50%);
+      color: #dc3545;
+      font-size: 22px;
+      font-weight: bold;
+      cursor: pointer;
+      opacity: 0.4;
+      transition: 0.3s;
+      padding: 5px;
+      line-height: 1;
+      z-index: 10;
+    }
+    li:hover .task-list__delete {
+      opacity: 1;
+    }
+    .task-list__delete:hover {
+      transform: translateY(-50%) scale(1.3);
     }
     .edit::after, .cancel::after {
       overflow: hidden;

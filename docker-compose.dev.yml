@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  backend:
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/dist:/app/dist
+      - db-data:/app/data
+    command: ["npx", "nodemon", "--watch", "/app/src", "--ext", "ts", "--exec", "ts-node", "src/index.ts"]
+    environment:
+      - PORT=3000
+
+  frontend:
+    volumes:
+      - ./dist:/usr/share/nginx/html

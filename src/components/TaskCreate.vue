@@ -51,7 +51,7 @@ export default defineComponent({
     document.body.addEventListener('keyup', this.keyupHandler);
   },
   beforeUnmount() {
-    document.body.addEventListener('keyup', this.keyupHandler);
+    document.body.removeEventListener('keyup', this.keyupHandler);
   },
   computed: {
     ...mapGetters('tasks', {

@@ -1,56 +1,67 @@
 
 
 <template>
-  <div class="history-item" v-if="item.id !== getEditHistory">
-    <div class="history-item__header flex-space">
-      <div class="history-item__title">
-        <span class="bold">{{ date }}</span>
+  <div>
+    <div class="history-item" v-if="item.id !== getEditHistory">
+      <div class="history-item__header flex-space">
+        <div class="history-item__title">
+          <span class="bold">{{ date }}</span>
+        </div>
+        
+        <div class="history-item__length flex-center">
+          <span class="info-label p4 mr2"
+            v-if="item.song_length"
+            title="Продолжительность">
+            {{ item.song_length }}
+          </span>
+          <span class="info-label p4 mr2"
+            v-if="item.date"
+            title="Дата создания">
+            {{ new Date(item.date + ' 00:00').toLocaleDateString() }}
+          </span>
+          <button class="p2" @click="edit">edit</button>
+          <button class="p2 history-item__delete" @click="deleteItem">del</button>
+        </div>
       </div>
+      <h5 class="mb2">{{ item.label ? item.label : '' }}</h5>
       
-      <div class="history-item__length flex-center">
-        <span class="info-label p4 mr2"
-          v-if="item.song_length"
-          title="Продолжительность">
-          {{ item.song_length }}
-        </span>
-        <span class="info-label p4 mr2"
-          v-if="item.date"
-          title="Дата создания">
-          {{ new Date(item.date + ' 00:00').toLocaleDateString() }}
-        </span>
-        <button class="p2" @click="edit">edit</button>
+      <div class="history-item__text text-left primary-label mb2"
+        v-if="item.text">
+        {{ item.text }}
+      </div>
+
+      <div class="history-item__path text-left flex-v-center"
+        v-if="item.path"
+        @click="copyPathText"
+        title="Скопировать путь">
+        <span class="bold">
+          Путь:&nbsp;
+        </span>{{ item.path }} 
+        <transition name="fade">
+          <span class="ml2 success-label" v-if="copied">
+            Путь скопирован!
+          </span>
+        </transition>
       </div>
     </div>
-    <h5 class="mb2">{{ item.label ? item.label : '' }}</h5>
-    
-    <div class="history-item__text text-left primary-label mb2"
-      v-if="item.text">
-      {{ item.text }}
-    </div>
 
-    <div class="history-item__path text-left flex-v-center"
-      v-if="item.path"
-      @click="copyPathText"
-      title="Скопировать путь">
-      <span class="bold">
-        Путь:&nbsp;
-      </span>{{ item.path }} 
-      <transition name="fade">
-        <span class="ml2 success-label" v-if="copied">
-          Путь скопирован!
-        </span>
-      </transition>
-    </div>
+    <history-form
+      :modelValue="item"
+
+      @update:modelValue="editHistory($event)"
+      @submit="submit"
+      @cancel="cancel"
+      v-else>
+    </history-form>
+
+    <confirm-dialog
+      :visible="!!getConfirmDelete"
+      :message="'Удалить запись #' + getConfirmDelete + '?'"
+      @confirm="confirmDelete"
+      @cancel="cancelDelete"
+    >
+    </confirm-dialog>
   </div>
-
-  <history-form
-    :modelValue="item"
-
-    @update:modelValue="editHistory($event)"
-    @submit="submit"
-    @cancel="cancel"
-    v-else>
-  </history-form>
 </template>
 
 <script lang="ts">
@@ -59,10 +70,11 @@ import IHistoryItem from '@/types/IHistoryItem';
 import { getFormatDateTime, dateOptions } from '@/api/date_time_format';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import HistoryForm from '@/components/HistoryForm.vue';
+import ConfirmDialog from '@/components/ConfirmDialog.vue';
 
 export default defineComponent({
   name: 'HistoryItem',
-  components: {HistoryForm},
+  components: {HistoryForm, ConfirmDialog},
   props: {
     item: {
       type: Object as PropType<IHistoryItem>,
@@ -89,6 +101,7 @@ export default defineComponent({
   computed: {
     ...mapGetters('history', {
       getEditHistory: 'get_edit_history',
+      getConfirmDelete: 'get_confirm_delete',
     }),
     date: function(): string {
       let res = new Date(this.item.created);
@@ -106,7 +119,10 @@ export default defineComponent({
       resetHistoryItem: 'reset_edit_history'
     }),
     ...mapActions('history', {
-      updateHistory: 'upd_history'
+      updateHistory: 'upd_history',
+      deleteHistoryItem: 'delete_history',
+      confirmDelete: 'confirm_delete_history',
+      cancelDelete: 'cancel_delete_history'
     }),
     submit(): void {
       this.updateHistory(this.vmodel);
@@ -115,6 +131,9 @@ export default defineComponent({
     edit() {
       this.toggleEditHistory(this.item.id);
       this.toggleHistoryCreate(false);
+    },
+    deleteItem() {
+      this.deleteHistoryItem(this.item.id);
     },
     cancel(): void {
       this.toggleEditHistory(this.item.id);
@@ -166,5 +185,19 @@ export default defineComponent({
   .history-item__path {
     font-size: 13px;
     cursor: context-menu;
+  }
+
+  .history-item__delete {
+    margin-left: 4px;
+    color: #dc3545;
+    background: none;
+    border: 1px solid #dc3545;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .history-item__delete:hover {
+    background: #dc3545;
+    color: white;
   }
 </style>
