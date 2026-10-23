@@ -81,44 +81,42 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue';
+<script setup lang="ts">
+import { PropType, reactive, watch } from 'vue';
 import ITaskItem from '@/types/ITaskItem';
 
-export default defineComponent({
-  name: 'TaskForm',
-  props: {
-    modelValue: {
-      type: Object as PropType<ITaskItem>,
-      required: true
-    },
-  },
-  data() {
-    return {
-      form: this.modelValue || {
-        label: '',
-        type: 'normal',
-        timer: false,
-        info: null,
-        reopen: true,
-        maxDate: null,
-        maxTime: null,
-      },
-      typeOptions: [
-        { value: 'normal', text: 'Обычная' },
-        { value: 'hot', text: 'Срочная' },
-      ]
-    }
-  },
-  watch: {
-    form: {
-      handler: function(val) {
-        this.$emit('update:modelValue', val);
-      },
-      deep: true
-    },
+const props = defineProps({
+  modelValue: {
+    type: Object as PropType<ITaskItem>,
+    required: true
   }
 });
+
+const emit = defineEmits(['update:modelValue']);
+
+const form = reactive<ITaskItem>({
+  ...props.modelValue,
+  label: props.modelValue.label ?? '',
+  type: props.modelValue.type || 'normal',
+  timer: props.modelValue.timer ?? false,
+  info: props.modelValue.info ?? null,
+  reopen: props.modelValue.reopen ?? true,
+  maxDate: props.modelValue.maxDate ?? null,
+  maxTime: props.modelValue.maxTime ?? null,
+});
+
+const typeOptions = [
+  { value: 'normal', text: 'Обычная' },
+  { value: 'hot', text: 'Срочная' },
+];
+
+watch(
+  form,
+  (val) => {
+    emit('update:modelValue', val);
+  },
+  { deep: true }
+);
 </script>
 
 <style scoped>

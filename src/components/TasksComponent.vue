@@ -38,83 +38,69 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-
+<script setup lang="ts">
+import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
 import TaskList from '@/components/TaskList.vue';
-import { mapGetters } from 'vuex';
-
+import { useTasksStore } from '@/store/tasks';
+import { useTaskSettingsStore } from '@/store/task_settings';
 import ITaskItem from '@/types/ITaskItem';
 import ITasksObject from '@/types/ITasksObject';
 
-export default defineComponent({
-  name: 'TasksComponent',
-  components: {TaskList},
-  computed: {
-    ...mapGetters('tasks', {
-      tasks: 'get_all_tasks'
-    }),
-    ...mapGetters('task_settings', {
-      hideMessages: 'get_hide_messages',
-      finishedByDate: 'get_finished_by_date',
-      tasksDirection: 'get_tasks_direction'
-    }),
-    isAllFinished: function(): boolean {
-      return this.finishedTasks.length === this.tasks.length;
-    },
-    AllTasks: function(): ITasksObject {
-      let opened = [];
-      let closed = [];
+const tasksStore = useTasksStore();
+const taskSettingsStore = useTaskSettingsStore();
 
-      for (let item of this.tasks) {
-        if(item.closed) {
-          closed.push(item);
-        } else {
-          opened.push(item);
-        }
+const { tasks } = storeToRefs(tasksStore);
+const { finishedByDate, tasksDirection } = storeToRefs(taskSettingsStore);
+
+const opened = computed<ITaskItem[]>(() => tasks.value.filter((i: ITaskItem) => !i.closed));
+const closed = computed<ITaskItem[]>(() => tasks.value.filter((i: ITaskItem) => i.closed));
+
+const isAllFinished = computed((): boolean => {
+  return closed.value.length === tasks.value.length;
+});
+
+const hotTasks = computed<ITaskItem[]>(() => {
+  const now = new Date();
+
+  return opened.value
+    .filter((i: ITaskItem) => i.type === 'hot')
+    .sort((a: ITaskItem, b: ITaskItem): number => {
+      const endA = new Date(a.maxDate + ' ' + a.maxTime);
+      const endB = new Date(b.maxDate + ' ' + b.maxTime);
+      const diffDateA = endA.getTime() - now.getTime();
+      const diffDateB = endB.getTime() - now.getTime();
+
+      return diffDateA - diffDateB;
+    });
+});
+
+const currentTasks = computed<ITaskItem[]>(() => {
+  return opened.value.filter((i: ITaskItem) => i.type === 'normal');
+});
+
+const finishedTasks = computed<ITaskItem[]>(() => {
+  return closed.value;
+});
+
+const finishedTasksByDate = computed<ITasksObject>(() => {
+  const res: ITasksObject = {};
+
+  [...finishedTasks.value]
+    .sort((a: ITaskItem, b: ITaskItem) =>
+      new Date(b.closed_date as string).getTime() - new Date(a.closed_date as string).getTime()
+    )
+    .forEach((item: ITaskItem) => {
+      const date: string = new Date(item.closed_date as string).toLocaleDateString();
+
+      if (date in res) {
+        res[date].push(item);
+      } else {
+        res[date] = [item];
       }
+    });
 
-      return {opened, closed};
-    },
-    hotTasks: function(): ITaskItem[] {
-      return this.AllTasks.opened
-        .filter((i) => i.type === 'hot')
-        .sort((a, b): number => {
-          let now = new Date();
-          let endA = new Date(a.maxDate + ' ' + a.maxTime);
-          let endB = new Date(b.maxDate + ' ' + b.maxTime);
-          let diffDateA = endA.getTime() - now.getTime();
-          let diffDateB = endB.getTime() - now.getTime();
-
-          return diffDateA - diffDateB;
-        });
-    },
-    currentTasks: function(): ITaskItem[] {
-      return this.AllTasks.opened.filter((i) => i.type === 'normal');
-    },
-    finishedTasks: function(): ITaskItem[] {
-      return this.AllTasks.closed;
-    },
-    finishedTasksByDate: function(): ITasksObject {
-      let res: ITasksObject = {};
-
-      [...this.finishedTasks as ITaskItem[]]
-      .sort((a, b) =>
-        new Date(b.closed_date as string).getTime() - new Date(a.closed_date as string).getTime()
-      )
-      .forEach((item: ITaskItem) => {
-        let date: string = new Date(item.closed_date as string).toLocaleDateString();
-
-        if(date in res) {
-            res[date].push(item);
-        } else {
-            res[date] = [item];
-        }
-      });
-
-      return res;
-    }
-  }
+  return res;
 });
 </script>
 

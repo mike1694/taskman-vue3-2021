@@ -65,45 +65,42 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue';
+<script setup lang="ts">
+import { PropType, reactive, watch } from 'vue';
 import IHistoryItem from '@/types/IHistoryItem';
 
-export default defineComponent({
-  name: 'HistoryForm',
-  props: {
-    modelValue: {
-      type: Object as PropType<IHistoryItem>,
-      required: true
-    },
-  },
-  data() {
-    return {
-      form: {...this.modelValue} || {
-        type: 'log',
-        label: '',
-        text: '',
-        path: '',
-        date: '',
-        song_length: '',
-        status: 'in_process'
-      } as IHistoryItem,
-      typeOptions: [
-        { value: 'created', text: 'Создано' },
-        { value: 'in_process', text: 'В работе' },
-        { value: 'finished', text: 'Закончено' },
-      ]
-    }
-  },
-  watch: {
-    form: {
-      handler: function(val) {
-        this.$emit('update:modelValue', val);
-      },
-      deep: true
-    },
+const props = defineProps({
+  modelValue: {
+    type: Object as PropType<IHistoryItem>,
+    required: true
   }
 });
+
+const emit = defineEmits(['update:modelValue', 'submit', 'cancel']);
+
+const form = reactive<IHistoryItem>({
+  ...props.modelValue,
+  label: props.modelValue.label ?? '',
+  text: props.modelValue.text ?? '',
+  path: props.modelValue.path ?? '',
+  date: props.modelValue.date ?? '',
+  song_length: props.modelValue.song_length ?? '',
+  status: props.modelValue.status || 'in_process'
+});
+
+const typeOptions = [
+  { value: 'created', text: 'Создано' },
+  { value: 'in_process', text: 'В работе' },
+  { value: 'finished', text: 'Закончено' },
+];
+
+watch(
+  form,
+  (val) => {
+    emit('update:modelValue', val);
+  },
+  { deep: true }
+);
 </script>
 
 <style scoped>
@@ -116,6 +113,4 @@ export default defineComponent({
     padding: 10px;
     background-color: #f5f5f5;
   }
-  /* @media screen and (max-width: 500px) {
-  } */
 </style>

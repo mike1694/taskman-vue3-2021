@@ -47,88 +47,82 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue';
-import { mapActions, mapMutations, mapGetters } from 'vuex';
+<script setup lang="ts">
+import { PropType } from 'vue';
+import { storeToRefs } from 'pinia';
 import TaskItem from '@/components/TaskItem.vue';
 import TaskForm from '@/components/TaskForm.vue';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
+import { useTasksStore } from '@/store/tasks';
 import ITaskItem from '@/types/ITaskItem';
 
-export default defineComponent({
-  name: 'TaskList',
-  components: {
-    TaskItem,
-    TaskForm,
-    ConfirmDialog
+defineProps({
+  title: String,
+  data: {
+    type: Array as PropType<ITaskItem[]>,
+    required: true
   },
-  props: {
-    title: String,
-    data: {
-      type: Array as PropType<ITaskItem[]>,
-      required: true
-    },
-    className: {
-      type: String,
-      default: ''
-    }
-  },
-  computed: {
-    ...mapGetters('tasks', {
-      getEditTask: 'get_edit_task',
-      tasks: 'get_all_tasks',
-      getConfirmDelete: 'get_confirm_delete'
-    })
-  },
-  methods: {
-    ...mapMutations('tasks', {
-      toggleEditTask: 'toggle_edit_task'
-    }),
-    ...mapActions('tasks', {
-      updateTask: 'upd_task',
-      deleteTask: 'delete_task',
-      confirmDelete: 'confirm_delete_task',
-      cancelDelete: 'cancel_delete_task'
-    }),
-    editTask(item: ITaskItem) {
-      this.updateTask(item);
-    },
-    editOnClick(id: number, e: any) {
-      if(this.getEditTask !== id) {
-        this.scrollTo(e);
-      }
-
-      this.toggleEditTask(id);
-    },
-    scrollTo(el: any) {
-      let top = el.target.offsetTop - 200;
-
-      setTimeout(() => {
-        window.scroll({
-          left: 0,
-          top: top,
-          behavior: 'smooth'
-        });
-      }, 300);
-    },
-    handleClick(id: number) {
-      let res = null;
-      
-      this.tasks.forEach((i: ITaskItem) => {
-        if(i.id === id) {
-          i.closed = !i.closed;
-          i.closed_date = i.closed ? new Date().toISOString() : null;
-
-          res = i;
-        }
-      });
-
-      if(!res) return undefined;
-
-      this.updateTask(res);
-    }
+  className: {
+    type: String,
+    default: ''
   }
-})
+});
+
+const tasksStore = useTasksStore();
+const { editTaskId: getEditTask, confirmDeleteId: getConfirmDelete, tasks } = storeToRefs(tasksStore);
+
+function editTask(item: ITaskItem) {
+  tasksStore.updateTask(item);
+}
+
+function editOnClick(id: number, e: any) {
+  if (getEditTask.value !== id) {
+    scrollTo(e);
+  }
+
+  tasksStore.toggleEditTask(id);
+}
+
+function scrollTo(el: any) {
+  const top = el.target.offsetTop - 200;
+
+  setTimeout(() => {
+    window.scroll({
+      left: 0,
+      top: top,
+      behavior: 'smooth'
+    });
+  }, 300);
+}
+
+function handleClick(id: number) {
+  let res = null as ITaskItem | null;
+
+  tasks.value.forEach((i: ITaskItem) => {
+    if (i.id === id) {
+      i.closed = !i.closed;
+      i.closed_date = i.closed ? new Date().toISOString() : null;
+
+      res = i;
+    }
+  });
+
+  if (!res) return undefined;
+
+  tasksStore.updateTask(res);
+}
+
+function deleteTask(id: number) {
+  tasksStore.deleteTask(id);
+}
+
+function confirmDelete() {
+  tasksStore.confirmDelete();
+}
+
+function cancelDelete() {
+  tasksStore.cancelDelete();
+}
 </script>
 
 <style scoped lang="scss">

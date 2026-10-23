@@ -1,38 +1,35 @@
 {
   "name": "taskman-vue3-ts-scss-eslint",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "private": true,
   "scripts": {
     "dev:backend": "cd backend && npm run dev",
-    "dev:frontend": "vue-cli-service serve",
+    "dev:frontend": "vite",
     "dev": "concurrently -n \"backend,frontend\" -c \"blue,green\" \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "build": "vue-cli-service build",
+    "build": "vite build",
+    "typecheck": "vue-tsc --noEmit",
     "prod": "npm run build && docker-compose up --build -d",
     "prod:stop": "docker-compose down",
     "prod:restart": "npm run build && docker-compose up --build -d",
-    "lint": "vue-cli-service lint"
+    "lint": "eslint --ext .js,.ts,.vue src"
   },
   "dependencies": {
-    "vue": "^3.2.21",
-    "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.2"
+    "pinia": "^4.1.0",
+    "vue": "^3.5.44",
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.0.0",
-    "@typescript-eslint/parser": "^5.0.0",
-    "@vue/cli-plugin-babel": "~5.0.8",
-    "@vue/cli-plugin-eslint": "~5.0.8",
-    "@vue/cli-plugin-router": "~5.0.8",
-    "@vue/cli-plugin-typescript": "~5.0.8",
-    "@vue/cli-plugin-vuex": "~5.0.8",
-    "@vue/cli-service": "~5.0.8",
-    "@vue/compiler-sfc": "^3.0.0",
-    "@vue/eslint-config-typescript": "^11.0.0",
+    "@types/node": "^26.6.5",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "@vitejs/plugin-vue": "^6.0.10",
+    "@vue/eslint-config-typescript": "^11.0.3",
     "concurrently": "^8.2.2",
-    "eslint": "^8.0.0",
-    "eslint-plugin-vue": "^9.0.0",
-    "sass": "^1.105.2",
-    "sass-loader": "^13.3.3",
-    "typescript": "^4.9.5"
+    "eslint": "^8.57.0",
+    "eslint-plugin-vue": "^9.33.0",
+    "sass": "^1.106.1",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.5",
+    "vue-tsc": "^3.3.13"
   }
 }

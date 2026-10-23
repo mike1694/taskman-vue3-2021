@@ -4,16 +4,6 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import HistoryComponent from '@/components/HistoryComponent.vue';
-// import TasksKeyup from '@/vueMixins/TasksKeyup.vue';
-
-export default defineComponent({
-  name: 'History',
-  // mixins: [TasksKeyup],
-  components: {
-    HistoryComponent
-  }
-});
 </script>

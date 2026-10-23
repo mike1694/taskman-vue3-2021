@@ -1,5 +1,3 @@
-
-
 <template>
   <div>
     <div class="history-item" v-if="item.id !== getEditHistory">
@@ -64,100 +62,91 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue';
+<script setup lang="ts">
+import { computed, ref, PropType } from 'vue';
+import { storeToRefs } from 'pinia';
 import IHistoryItem from '@/types/IHistoryItem';
 import { getFormatDateTime, dateOptions } from '@/api/date_time_format';
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { useHistoryStore } from '@/store/history';
 import HistoryForm from '@/components/HistoryForm.vue';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
 
-export default defineComponent({
-  name: 'HistoryItem',
-  components: {HistoryForm, ConfirmDialog},
-  props: {
-    item: {
-      type: Object as PropType<IHistoryItem>,
-      required: true
-    },
-  },
-  data() {
-    return {
-      copied: false,
-      vmodel: {
-        type: 'log',
-        label: '',
-        text: '',
-        path: '',
-        date: '',
-        song_length: '',
-        status: 'created'
-      } as IHistoryItem
-    }
-  },
-  created() {
-    this.toggleHistoryCreate(false);
-  },
-  computed: {
-    ...mapGetters('history', {
-      getEditHistory: 'get_edit_history',
-      getConfirmDelete: 'get_confirm_delete',
-    }),
-    date: function(): string {
-      let res = new Date(this.item.created);
-
-      return getFormatDateTime(res, {
-        ...dateOptions,
-        year: 'numeric'
-      });
-    },
-  },
-  methods: {
-    ...mapMutations('history', {
-      toggleEditHistory: 'toggle_edit_history',
-      toggleHistoryCreate: 'toggle_history_create',
-      resetHistoryItem: 'reset_edit_history'
-    }),
-    ...mapActions('history', {
-      updateHistory: 'upd_history',
-      deleteHistoryItem: 'delete_history',
-      confirmDelete: 'confirm_delete_history',
-      cancelDelete: 'cancel_delete_history'
-    }),
-    submit(): void {
-      this.updateHistory(this.vmodel);
-      this.resetHistoryItem();
-    },
-    edit() {
-      this.toggleEditHistory(this.item.id);
-      this.toggleHistoryCreate(false);
-    },
-    deleteItem() {
-      this.deleteHistoryItem(this.item.id);
-    },
-    cancel(): void {
-      this.toggleEditHistory(this.item.id);
-    },
-    editHistory(e: IHistoryItem): void {
-      this.vmodel = e;
-    },
-
-    copyPathText() {
-      let input = document.createElement('input');
-
-      input.value = this.item.path;
-      document.body.appendChild(input);
-
-      input.select();
-      document.execCommand('Copy');
-      input.remove();
-
-      this.copied = true;
-
-      setTimeout(() => this.copied = false, 5000);
-    }
+const props = defineProps({
+  item: {
+    type: Object as PropType<IHistoryItem>,
+    required: true
   }
 });
+
+const historyStore = useHistoryStore();
+const { editHistoryId: getEditHistory, confirmDeleteId: getConfirmDelete } = storeToRefs(historyStore);
+
+const copied = ref(false);
+const vmodel = ref<IHistoryItem>({
+  type: 'log',
+  label: '',
+  text: '',
+  path: '',
+  date: '',
+  song_length: '',
+  status: 'created'
+} as IHistoryItem);
+
+historyStore.toggleHistoryCreate(false);
+
+const date = computed((): string => {
+  const res = new Date(props.item.created);
+
+  return getFormatDateTime(res, {
+    ...dateOptions,
+    year: 'numeric'
+  });
+});
+
+function submit(): void {
+  historyStore.updateHistory(vmodel.value);
+  historyStore.resetEditHistory();
+}
+
+function edit() {
+  historyStore.toggleEditHistory(props.item.id);
+  historyStore.toggleHistoryCreate(false);
+}
+
+function deleteItem() {
+  historyStore.deleteHistory(props.item.id);
+}
+
+function cancel(): void {
+  historyStore.toggleEditHistory(props.item.id);
+}
+
+function editHistory(e: IHistoryItem): void {
+  vmodel.value = e;
+}
+
+function confirmDelete() {
+  historyStore.confirmDelete();
+}
+
+function cancelDelete() {
+  historyStore.cancelDelete();
+}
+
+function copyPathText() {
+  const input = document.createElement('input');
+
+  input.value = props.item.path;
+  document.body.appendChild(input);
+
+  input.select();
+  document.execCommand('Copy');
+  input.remove();
+
+  copied.value = true;
+
+  setTimeout(() => { copied.value = false; }, 5000);
+}
 </script>
 
 <style scoped>

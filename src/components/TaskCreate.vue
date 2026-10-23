@@ -11,104 +11,94 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import { mapGetters, mapActions } from 'vuex';
+<script setup lang="ts">
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import TaskForm from '@/components/TaskForm.vue';
+import { useTasksStore } from '@/store/tasks';
 import ITaskItem from '@/types/ITaskItem';
 
-export default defineComponent({
-  name: 'TaskCreate',
-  components: {TaskForm},
-  data() {
-    return {
-      vmodel: {
-        type: 'normal',
-        label: '',
-        info: '',
-        reopen: true,
-        maxDate: null,
-        maxTime: null,
-        timer: false
-      } as ITaskItem
-    };
-  },
-  watch: {
-    'vmodel.type': function(val) {
-      let tmpDate: string[] = new Date().toJSON().split('T');
+const router = useRouter();
+const route = useRoute();
+const tasksStore = useTasksStore();
 
-      switch(val) {
-        case 'hot':
-          this.vmodel.maxDate = tmpDate[0];
-          break;
-        case 'normal':
-          this.vmodel.maxDate = null;
-          break;
-      }
-    }
-  },
-  mounted() {
-    document.body.addEventListener('keyup', this.keyupHandler);
-  },
-  beforeUnmount() {
-    document.body.removeEventListener('keyup', this.keyupHandler);
-  },
-  computed: {
-    ...mapGetters('tasks', {
-      tasks: 'get_all_tasks'
-    })
-  },
-  methods: {
-    ...mapActions('tasks', {
-      createTask: 'create_task'
-    }),
-    addTask() {
-      if(!this.vmodel.label) return undefined;
+const vmodel = ref<ITaskItem>({
+  type: 'normal',
+  label: '',
+  info: '',
+  reopen: true,
+  maxDate: null,
+  maxTime: null,
+  timer: false
+} as ITaskItem);
 
-      let res: ITaskItem = {
-        ...this.vmodel,
-        created: new Date().toISOString(),
-        closed: false,
-        id: Date.now()
-      };
+watch(
+  () => vmodel.value.type,
+  (val) => {
+    const tmpDate: string[] = new Date().toJSON().split('T');
 
-      this.createTask(res);
-      this.$router.push('/');
-    },
-    keyupHandler(e: any) {
-      if(this.$route.path !== '/create') {
-        return undefined;
-      }
-
-      switch(e.code) {
-        case 'Escape':
-          this.$router.push('/');
-          break;
-        case 'NumpadEnter':
-        case 'Enter':
-          if(e.target.tagName === "TEXTAREA") {
-            return undefined;
-          }
-          this.addTask();
-          break;
-        // case 'NumpadAdd':
-        // case 'Equal':
-        //   break;
-      }
-    },
-    resetModal(): void {
-      this.vmodel.type = 'normal';
-      this.vmodel.label = '';
-      this.vmodel.info = '';
-      this.vmodel.reopen = true;
-      this.vmodel.maxDate = null;
-      this.vmodel.maxTime = null;
-      this.vmodel.timer = false;
-
-      this.$router.push('/');
+    switch (val) {
+      case 'hot':
+        vmodel.value.maxDate = tmpDate[0];
+        break;
+      case 'normal':
+        vmodel.value.maxDate = null;
+        break;
     }
   }
-})
+);
+
+const keyupHandler = (e: any) => {
+  if (route.path !== '/create') {
+    return undefined;
+  }
+
+  switch (e.code) {
+    case 'Escape':
+      router.push('/');
+      break;
+    case 'NumpadEnter':
+    case 'Enter':
+      if (e.target.tagName === "TEXTAREA") {
+        return undefined;
+      }
+      addTask();
+      break;
+  }
+};
+
+onMounted(() => {
+  document.body.addEventListener('keyup', keyupHandler);
+});
+onBeforeUnmount(() => {
+  document.body.removeEventListener('keyup', keyupHandler);
+});
+
+function addTask() {
+  if (!vmodel.value.label) return undefined;
+
+  const res: ITaskItem = {
+    ...vmodel.value,
+    created: new Date().toISOString(),
+    closed: false,
+    id: Date.now()
+  };
+
+  tasksStore.createTask(res);
+  router.push('/');
+}
+
+function resetModal(): void {
+  vmodel.value.type = 'normal';
+  vmodel.value.label = '';
+  vmodel.value.info = '';
+  vmodel.value.reopen = true;
+  vmodel.value.maxDate = null;
+  vmodel.value.maxTime = null;
+  vmodel.value.timer = false;
+
+  router.push('/');
+}
 </script>
 
 <style scoped>

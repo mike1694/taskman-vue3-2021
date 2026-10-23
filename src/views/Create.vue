@@ -4,14 +4,6 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import TaskCreate from '@/components/TaskCreate.vue';
-
-export default defineComponent({
-  name: 'Create',
-  components: {
-    TaskCreate,
-  },
-});
 </script>

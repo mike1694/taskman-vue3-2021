@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
-import store from './store';
+import pinia from './store';
 import './assets/css/global.css';
 // import './assets/scss/main.scss';
 
@@ -15,6 +15,6 @@ app.directive('focus', {
   }
 });
 
-app.use(store)
+app.use(pinia)
     .use(router)
-.mount('#app');
+    .mount('#app');

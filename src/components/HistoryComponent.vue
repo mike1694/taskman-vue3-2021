@@ -22,35 +22,25 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-
+<script setup lang="ts">
+import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
 import HistoryItem from '@/components/HistoryItem.vue';
 import HistoryCreate from '@/components/HistoryCreate.vue';
-import { mapGetters, mapMutations, mapState } from 'vuex';
+import { useHistoryStore } from '@/store/history';
 import IHistoryItem from '@/types/IHistoryItem';
 
-export default defineComponent({
-  name: 'HistoryComponent',
-  components: {HistoryItem, HistoryCreate},
-  computed: {
-    ...mapState('history', {
-      showHistoryCreate: 'show_history_create',
-    }),
-    ...mapGetters('history', {
-      history: 'get_all_history',
-    }),
-    historySorted: function(): IHistoryItem[] {
-      return [...this.history as IHistoryItem[]]
-        .sort((a, b) => b.id - a.id);
-    }
-  },
-  methods: {
-    ...mapMutations('history', {
-      toggleHistoryCreate: 'toggle_history_create'
-    })
-  }
+const historyStore = useHistoryStore();
+const { history, showHistoryCreate } = storeToRefs(historyStore);
+
+const historySorted = computed<IHistoryItem[]>(() => {
+  return [...history.value]
+    .sort((a: IHistoryItem, b: IHistoryItem) => b.id - a.id);
 });
+
+function toggleHistoryCreate(payload: boolean) {
+  historyStore.toggleHistoryCreate(payload);
+}
 </script>
 
 <style scoped>

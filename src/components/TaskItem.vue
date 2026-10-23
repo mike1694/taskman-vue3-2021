@@ -36,53 +36,43 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { computed, PropType } from 'vue';
+import { storeToRefs } from 'pinia';
 import ITaskItem from '@/types/ITaskItem';
-import {getFormatDateTime} from '@/api/date_time_format';
-import { defineComponent, PropType } from 'vue';
-import {mapGetters} from 'vuex';
+import { useTaskSettingsStore } from '@/store/task_settings';
+import { getFormatDateTime } from '@/api/date_time_format';
 
-// import TaskTimer from '@/components/TaskTimer.vue';
-
-export default defineComponent({
-  name: 'TaskItem',
-  // components: { TaskTimer },
-  props: {
-    item: {
-      type: Object as PropType<ITaskItem>,
-      required: true
-    }
-  },
-  data() {
-    return {
-      dateType: ['date', 'date-time'],
-    };
-  },
-  computed: {
-    ...mapGetters('task_settings', {
-      showInfo: 'get_show_info',
-      showDate: 'get_show_date',
-      tasksTimer: 'get_tasks_timer'
-    }),
-    getCreatedDate: function(): string {
-      switch(this.dateType[0]) {
-        case 'date':
-          return new Date(this.item.created).toLocaleDateString();
-        case 'date-time':
-          return new Date(this.item.created).toLocaleString();
-        default:
-          return this.item.created;
-      }
-    },
-    getEndDate: function(): string {
-      let date = new Date(
-          this.item.maxDate + ' ' + (this.item.maxTime || '00:00')
-      );
-
-      return getFormatDateTime(date);
-    }
+const props = defineProps({
+  item: {
+    type: Object as PropType<ITaskItem>,
+    required: true
   }
-})
+});
+
+const taskSettingsStore = useTaskSettingsStore();
+const { showInfo, showDate, tasksTimer } = storeToRefs(taskSettingsStore);
+
+const dateType = ['date', 'date-time'];
+
+const getCreatedDate = computed((): string => {
+  switch (dateType[0]) {
+    case 'date':
+      return new Date(props.item.created).toLocaleDateString();
+    case 'date-time':
+      return new Date(props.item.created).toLocaleString();
+    default:
+      return props.item.created;
+  }
+});
+
+const getEndDate = computed((): string => {
+  const date = new Date(
+    props.item.maxDate + ' ' + (props.item.maxTime || '00:00')
+  );
+
+  return getFormatDateTime(date);
+});
 </script>
 
 <style scoped>

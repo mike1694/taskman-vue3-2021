@@ -1,21 +1,8 @@
-import { createStore } from 'vuex';
+import { createPinia, type Pinia } from 'pinia';
 
-import tasks from './tasks';
-import task_settings from './task_settings';
-import history from './history';
+const pinia: Pinia = createPinia();
 
-export default createStore({
-  state: {
-  },
-  mutations: {
-  },
-  getters: {
-  },
-  actions: {
-  },
-  modules: {
-    tasks,
-    task_settings,
-    history
-  }
-})
+export default pinia;
+export { useTasksStore } from './tasks';
+export { useHistoryStore } from './history';
+export { useTaskSettingsStore } from './task_settings';

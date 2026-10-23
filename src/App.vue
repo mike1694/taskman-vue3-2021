@@ -7,26 +7,21 @@
   <!-- <div class="wallpaper"></div> -->
   <router-view/>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue';
-import { mapActions } from 'vuex';
-import AppRouteKeyupVue from './vueMixins/AppRouteKeyup.vue';
 
-export default defineComponent({
-  mixins: [AppRouteKeyupVue],
-  name: 'App',
-  created() {
-    this.getTasks();
-    this.getHistory();
-  },
-  methods: {
-    ...mapActions('tasks', {
-      getTasks: 'get_tasks'
-    }),
-    ...mapActions('history', {
-      getHistory: 'get_history'
-    })
-  }
+<script setup lang="ts">
+import { onMounted } from 'vue';
+import { useTasksStore } from '@/store/tasks';
+import { useHistoryStore } from '@/store/history';
+import useAppRouteKeyup from '@/composables/useAppRouteKeyup';
+
+const tasksStore = useTasksStore();
+const historyStore = useHistoryStore();
+
+useAppRouteKeyup();
+
+onMounted(() => {
+  tasksStore.getTasks();
+  historyStore.getHistory();
 });
 </script>
 

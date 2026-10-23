@@ -1,0 +1,11 @@
+# Project Coding Rules (Non-Obvious Only)
+- After any DB write route, call `save()` from `backend/src/db.ts` — `sql.js` keeps the DB in memory, unsaved writes vanish on restart.
+- Row mappings in `backend/src/routes/*.ts` are positional (`row[0..11]`): changing `CREATE TABLE` columns in `backend/src/db.ts` requires updating the mapping arrays in the same change.
+- Keep frontend types (`src/types/*.ts`) and backend types (`backend/src/types.ts`) in sync manually — they are duplicated, not shared.
+- Vuex modules are `namespaced: true` with snake_case actions/mutations/getters: `dispatch('tasks/get_tasks')`, `mapGetters('tasks', { tasks: 'get_all_tasks' })`.
+- Vue components use Options API (`defineComponent`); do not introduce `<script setup>` or Composition API.
+- Entity types are `I`-prefixed interfaces with default export (`ITaskItem`, `IHistoryItem`).
+- API calls go through `src/api/fetch_api.ts`: `fetch_get` returns `[]` and `fetch_post` returns `{error:true}` on failure — check results, never rely on thrown exceptions.
+- All mutations are POST-style endpoints (`/task/delete`, `/history/create`) — add new mutations the same way; no HTTP DELETE endpoints exist.
+- Quote style is unenforced: stores/API files use double quotes with `@/` alias, backend uses single quotes — match the surrounding file.
+- No test framework exists; do not add tests or test dependencies without an explicit request.

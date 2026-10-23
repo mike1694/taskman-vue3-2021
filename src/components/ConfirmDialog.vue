@@ -12,31 +12,27 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-  name: 'ConfirmDialog',
-  props: {
-    visible: {
-      type: Boolean,
-      default: false
-    },
-    message: {
-      type: String,
-      default: 'Вы уверены, что хотите удалить?'
-    }
+<script setup lang="ts">
+defineProps({
+  visible: {
+    type: Boolean,
+    default: false
   },
-  emits: ['confirm', 'cancel'],
-  methods: {
-    confirm() {
-      this.$emit('confirm');
-    },
-    cancel() {
-      this.$emit('cancel');
-    }
+  message: {
+    type: String,
+    default: 'Вы уверены, что хотите удалить?'
   }
 });
+
+const emit = defineEmits(['confirm', 'cancel']);
+
+function confirm() {
+  emit('confirm');
+}
+
+function cancel() {
+  emit('cancel');
+}
 </script>
 
 <style scoped>

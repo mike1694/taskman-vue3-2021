@@ -4,16 +4,9 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import TasksComponent from '@/components/TasksComponent.vue';
-import TasksKeyup from '@/vueMixins/TasksKeyup.vue';
+import useTasksKeyup from '@/composables/useTasksKeyup';
 
-export default defineComponent({
-  name: 'Tasks',
-  mixins: [TasksKeyup],
-  components: {
-    TasksComponent
-  }
-});
+useTasksKeyup();
 </script>
