@@ -9,3 +9,4 @@
 - All mutations are POST-style endpoints (`/task/delete`, `/history/create`) — add new mutations the same way; no HTTP DELETE endpoints exist.
 - Quote style is unenforced: stores/API files use double quotes with `@/` alias, backend uses single quotes — match the surrounding file.
 - No test framework exists; do not add tests or test dependencies without an explicit request.
+- In Vue templates, attributes follow the Vue Style Guide "element attribute order": `v-for` → `v-if`/`v-else-if`/`v-else`/`v-show` → `id` → `ref`/`key` → `v-model` → dynamic `:prop` → static attrs (`class`, `title`, ...) → `@event`/`v-on` → `v-html`/`v-text`; keep static attrs in their source order. Applied manually — oxlint has no `vue/attributes-order` rule and oxfmt does not sort attributes.

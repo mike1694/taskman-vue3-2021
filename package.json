@@ -11,7 +11,10 @@
     "prod": "npm run build && docker-compose up --build -d",
     "prod:stop": "docker-compose down",
     "prod:restart": "npm run build && docker-compose up --build -d",
-    "lint": "eslint --ext .js,.ts,.vue src"
+    "lint": "oxlint src backend vite.config.mts",
+    "lint:fix": "oxlint --fix src backend vite.config.mts",
+    "format": "oxfmt src backend vite.config.mts",
+    "format:check": "oxfmt --check src backend vite.config.mts"
   },
   "dependencies": {
     "pinia": "^4.1.0",
@@ -20,13 +23,10 @@
   },
   "devDependencies": {
     "@types/node": "^26.6.5",
-    "@typescript-eslint/eslint-plugin": "^5.62.0",
-    "@typescript-eslint/parser": "^5.62.0",
     "@vitejs/plugin-vue": "^6.0.10",
-    "@vue/eslint-config-typescript": "^11.0.3",
     "concurrently": "^8.2.2",
-    "eslint": "^8.57.0",
-    "eslint-plugin-vue": "^9.33.0",
+    "oxfmt": "^0.74.0",
+    "oxlint": "^1.89.0",
     "sass": "^1.106.1",
     "typescript": "^5.9.3",
     "vite": "^8.3.5",

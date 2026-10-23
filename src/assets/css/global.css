@@ -22,8 +22,8 @@ body {
 
 hr {
   /* height:2px; */
-  height:1px;
-  border-width:0;
+  height: 1px;
+  border-width: 0;
   /* color:gray; */
-  background-color:gray;
+  background-color: gray;
 }

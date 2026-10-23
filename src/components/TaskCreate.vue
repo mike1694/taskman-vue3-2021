@@ -2,11 +2,10 @@
   <div class="task-create">
     <h4 class="mb2">Создать новую задачу</h4>
 
-    <task-form
-      v-model="vmodel">
-    </task-form>
+    <TaskForm v-model="vmodel"> </TaskForm>
 
     <button class="mr2 p5" @click="addTask">Ок</button>
+
     <button class="p5" @click="resetModal">Отмена</button>
   </div>
 </template>
@@ -14,23 +13,25 @@
 <script setup lang="ts">
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import TaskForm from '@/components/TaskForm.vue';
+
 import { useTasksStore } from '@/store/tasks';
-import ITaskItem from '@/types/ITaskItem';
+import type { TaskItem } from '@/types/TaskItem';
+
+import TaskForm from '@/components/TaskForm.vue';
 
 const router = useRouter();
 const route = useRoute();
 const tasksStore = useTasksStore();
 
-const vmodel = ref<ITaskItem>({
+const vmodel = ref<TaskItem>({
   type: 'normal',
   label: '',
   info: '',
   reopen: true,
   maxDate: null,
   maxTime: null,
-  timer: false
-} as ITaskItem);
+  timer: false,
+} as TaskItem);
 
 watch(
   () => vmodel.value.type,
@@ -45,7 +46,7 @@ watch(
         vmodel.value.maxDate = null;
         break;
     }
-  }
+  },
 );
 
 const keyupHandler = (e: any) => {
@@ -59,7 +60,7 @@ const keyupHandler = (e: any) => {
       break;
     case 'NumpadEnter':
     case 'Enter':
-      if (e.target.tagName === "TEXTAREA") {
+      if (e.target.tagName === 'TEXTAREA') {
         return undefined;
       }
       addTask();
@@ -77,11 +78,11 @@ onBeforeUnmount(() => {
 function addTask() {
   if (!vmodel.value.label) return undefined;
 
-  const res: ITaskItem = {
+  const res: TaskItem = {
     ...vmodel.value,
     created: new Date().toISOString(),
     closed: false,
-    id: Date.now()
+    id: Date.now(),
   };
 
   tasksStore.createTask(res);

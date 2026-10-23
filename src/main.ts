@@ -1,8 +1,10 @@
 import { createApp } from 'vue';
-import App from './App.vue';
-import router from './router';
-import pinia from './store';
-import './assets/css/global.css';
+
+import { router } from '@/router';
+import { pinia } from '@/store';
+import '@/assets/css/global.css';
+
+import App from '@/App.vue';
 // import './assets/scss/main.scss';
 
 const app = createApp(App);
@@ -12,9 +14,7 @@ app.directive('focus', {
   mounted(el: HTMLElement) {
     // Focus the element
     el.focus();
-  }
+  },
 });
 
-app.use(pinia)
-    .use(router)
-    .mount('#app');
+app.use(pinia).use(router).mount('#app');

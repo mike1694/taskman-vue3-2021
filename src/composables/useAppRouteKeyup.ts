@@ -1,14 +1,17 @@
 import { onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 
-export default function useAppRouteKeyup(): void {
+export function useAppRouteKeyup(): void {
   const router = useRouter();
 
   const keyupHandler = (e: KeyboardEvent): void => {
     if (e.target instanceof HTMLInputElement && e.code === 'Escape') {
       return;
     }
-    if (e.target instanceof HTMLTextAreaElement && e.code === 'Escape') {
+    if (
+      e.target instanceof HTMLTextAreaElement &&
+      e.code === 'Escape'
+    ) {
       return;
     }
 

@@ -1,77 +1,86 @@
 <template>
-  <div :class="className">
-    <h5 class="mb2 mt2" v-show="data.length">
+  <div :class="props.className">
+    <h5 v-show="props.data.length" class="mb2 mt2">
       <div class="info-title">
-        {{ title }}: {{ data.length }}
+        {{ props.title }}: {{ props.data.length }}
       </div>
     </h5>
 
     <transition-group name="flip-list" tag="ul">
-      <li v-for="item in data"
-        :key="className + item.id"
-        :class="{'edit-task': getEditTask === item.id}">
-        <div :class="(getEditTask !== item.id) ? 'edit' : 'cancel'"
-            @click="editOnClick(item.id, $event)">
-        </div>
+      <li
+        v-for="item in data"
+        :key="props.className + item.id"
+        :class="{ 'edit-task': getEditTask === item.id }"
+      >
+        <div
+          :class="getEditTask !== item.id ? 'edit' : 'cancel'"
+          @click="editOnClick(item.id, $event)"
+        ></div>
 
         <div class="task-list__delete" @click="deleteTask(item.id)">
           ×
         </div>
 
-        <div  v-if="getEditTask === item.id">
+        <div v-if="getEditTask === item.id">
           <h5 class="mb2">Редактирование задачи</h5>
-          <task-form
-            :key="className + '-form-' + item.id"
-            :modelValue="item"
 
+          <TaskForm
+            :key="props.className + '-form-' + item.id"
+            :modelValue="item"
             @update:modelValue="editTask($event)"
           >
-          </task-form>
+          </TaskForm>
         </div>
-                
-        <task-item v-else
-          :key="className + '-item-' + item.id"
+
+        <TaskItemComponent
+          v-else
+          :key="props.className + '-item-' + item.id"
           :item="item"
-          @click="handleClick">
-        </task-item>
+          @click="handleClick"
+        >
+        </TaskItemComponent>
       </li>
     </transition-group>
 
-    <confirm-dialog
+    <ConfirmDialog
       :visible="!!getConfirmDelete"
       :message="'Удалить задачу #' + getConfirmDelete + '?'"
       @confirm="confirmDelete"
       @cancel="cancelDelete"
     >
-    </confirm-dialog>
+    </ConfirmDialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue';
 import { storeToRefs } from 'pinia';
-import TaskItem from '@/components/TaskItem.vue';
+
+import { useTasksStore } from '@/store/tasks';
+import type { TaskItem } from '@/types/TaskItem';
+
+import TaskItemComponent from '@/components/TaskItem.vue';
 import TaskForm from '@/components/TaskForm.vue';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
-import { useTasksStore } from '@/store/tasks';
-import ITaskItem from '@/types/ITaskItem';
 
-defineProps({
-  title: String,
-  data: {
-    type: Array as PropType<ITaskItem[]>,
-    required: true
+const props = withDefaults(
+  defineProps<{
+    title?: string;
+    data: TaskItem[];
+    className?: string;
+  }>(),
+  {
+    className: '',
   },
-  className: {
-    type: String,
-    default: ''
-  }
-});
+);
 
 const tasksStore = useTasksStore();
-const { editTaskId: getEditTask, confirmDeleteId: getConfirmDelete, tasks } = storeToRefs(tasksStore);
+const {
+  editTaskId: getEditTask,
+  confirmDeleteId: getConfirmDelete,
+  tasks,
+} = storeToRefs(tasksStore);
 
-function editTask(item: ITaskItem) {
+function editTask(item: TaskItem) {
   tasksStore.updateTask(item);
 }
 
@@ -90,15 +99,15 @@ function scrollTo(el: any) {
     window.scroll({
       left: 0,
       top: top,
-      behavior: 'smooth'
+      behavior: 'smooth',
     });
   }, 300);
 }
 
 function handleClick(id: number) {
-  let res = null as ITaskItem | null;
+  let res = null as TaskItem | null;
 
-  tasks.value.forEach((i: ITaskItem) => {
+  tasks.value.forEach((i: TaskItem) => {
     if (i.id === id) {
       i.closed = !i.closed;
       i.closed_date = i.closed ? new Date().toISOString() : null;
@@ -127,21 +136,21 @@ function cancelDelete() {
 
 <style scoped lang="scss">
 .flip-list-move {
-  transition: .3s;
+  transition: 0.3s;
 }
 
 .flip-list-enter {
   transform: translateX(-100px);
-  opacity: .3;
+  opacity: 0.3;
 }
 
 .flip-list-enter-to {
-  transition: .3s;
+  transition: 0.3s;
 }
 
 .flip-list-leave-to {
   transform: scale(1.3);
-  opacity: .3;
+  opacity: 0.3;
 }
 
 @media screen and (max-width: 500px) {
@@ -176,7 +185,8 @@ ul {
       border-color: #d4edda;
     }
 
-    .edit, .cancel {
+    .edit,
+    .cancel {
       position: relative;
     }
     .task-list__delete {
@@ -200,7 +210,8 @@ ul {
     .task-list__delete:hover {
       transform: translateY(-50%) scale(1.3);
     }
-    .edit::after, .cancel::after {
+    .edit::after,
+    .cancel::after {
       overflow: hidden;
       content: '';
       font-size: 10px;
@@ -227,7 +238,8 @@ ul {
     .cancel::after {
       background-color: red;
     }
-    .edit:hover::after, .cancel:hover::after {
+    .edit:hover::after,
+    .cancel:hover::after {
       content: 'edit';
       opacity: 0.5;
       transform: scale(1.2);

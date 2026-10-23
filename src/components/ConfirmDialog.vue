@@ -1,27 +1,39 @@
 <template>
-  <div class="confirm-dialog-overlay" v-if="visible">
+  <div v-if="props.visible" class="confirm-dialog-overlay">
     <div class="confirm-dialog">
       <div class="confirm-dialog__content">
-        <p>{{ message }}</p>
+        <p>{{ props.message }}</p>
       </div>
+
       <div class="confirm-dialog__actions">
-        <button class="confirm-dialog__btn confirm-dialog__btn--yes" @click="confirm">Да</button>
-        <button class="confirm-dialog__btn confirm-dialog__btn--no" @click="cancel">Нет</button>
+        <button
+          class="confirm-dialog__btn confirm-dialog__btn--yes"
+          @click="confirm"
+        >
+          Да
+        </button>
+
+        <button
+          class="confirm-dialog__btn confirm-dialog__btn--no"
+          @click="cancel"
+        >
+          Нет
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-defineProps({
+const props = defineProps({
   visible: {
     type: Boolean,
-    default: false
+    default: false,
   },
   message: {
     type: String,
-    default: 'Вы уверены, что хотите удалить?'
-  }
+    default: 'Вы уверены, что хотите удалить?',
+  },
 });
 
 const emit = defineEmits(['confirm', 'cancel']);

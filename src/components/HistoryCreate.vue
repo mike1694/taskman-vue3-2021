@@ -2,14 +2,13 @@
   <div class="history-create">
     <h4 class="mb2">Создать новую историю</h4>
 
-    <history-form
+    <HistoryForm
       :modelValue="vmodel"
-
       @update:modelValue="vmodel = $event"
-      
       @submit="addHistory"
-      @cancel="reset">
-    </history-form>
+      @cancel="reset"
+    >
+    </HistoryForm>
   </div>
 </template>
 
@@ -17,16 +16,18 @@
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import HistoryForm from '@/components/HistoryForm.vue';
+
 import { useHistoryStore } from '@/store/history';
-import { getDateNow } from '@/api/date_now';
-import IHistoryItem from '@/types/IHistoryItem';
+import { getDateNow } from '@/api/dateNow';
+import type { HistoryItem } from '@/types/HistoryItem';
+
+import HistoryForm from '@/components/HistoryForm.vue';
 
 const route = useRoute();
 const historyStore = useHistoryStore();
 const { history } = storeToRefs(historyStore);
 
-const vmodel = ref<IHistoryItem>({
+const vmodel = ref<HistoryItem>({
   type: 'log',
   label: '',
   text: '',
@@ -34,18 +35,20 @@ const vmodel = ref<IHistoryItem>({
   date: getDateNow(),
   song_length: '',
   status: 'in_process',
-} as IHistoryItem);
+} as HistoryItem);
 
 watch(
   () => vmodel.value.path,
   (path) => {
     // create date project autocomplete
-    const item = history.value.find((i: IHistoryItem) => i.path === path);
+    const item = history.value.find(
+      (i: HistoryItem) => i.path === path,
+    );
 
     if (item) {
       vmodel.value.date = item.date;
     }
-  }
+  },
 );
 
 historyStore.resetEditHistory();
@@ -62,7 +65,7 @@ const keyupHandler = (e: any) => {
       break;
     case 'NumpadEnter':
     case 'Enter':
-      if (e.target.tagName === "TEXTAREA") {
+      if (e.target.tagName === 'TEXTAREA') {
         return undefined;
       }
       addHistory();
@@ -79,10 +82,10 @@ onBeforeUnmount(() => {
 });
 
 function addHistory() {
-  const res: IHistoryItem = {
+  const res: HistoryItem = {
     ...vmodel.value,
     created: new Date().toISOString(),
-    id: Date.now()
+    id: Date.now(),
   };
 
   historyStore.createHistory(res);

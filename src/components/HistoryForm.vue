@@ -2,12 +2,13 @@
   <div class="history-form">
     <div class="mb2">
       <input
-        type="text"
-        v-focus
-        class="create-task-modal__header--input"
         v-model="form.label"
+        v-focus
+        type="text"
+        class="create-task-modal__header--input"
         autocomplete="off"
-        placeholder="Заголовок">
+        placeholder="Заголовок"
+      />
     </div>
 
     <div class="mb2">
@@ -15,77 +16,81 @@
         v-model="form.text"
         placeholder="Описание"
         rows="3"
-        max-rows="6">
+        max-rows="6"
+      >
       </textarea>
     </div>
 
     <div class="mb2">
       <input
-        type="text"
         v-model="form.path"
+        type="text"
         autocomplete="off"
-        placeholder="Папка проекта">
+        placeholder="Папка проекта"
+      />
     </div>
 
     <div class="flex flex-wrap flex-between">
       <div class="flex-50-item">
         <input
+          v-model="form.song_length"
           type="time"
           class="mb2"
-          v-model="form.song_length"
           autocomplete="off"
           title="Продолжительность"
-          placeholder="Продолжительность">
+          placeholder="Продолжительность"
+        />
       </div>
-      
+
       <div class="flex-50-item">
-        <select class="mb2"
-          v-model="form.status">
-          <option v-for="item in typeOptions"
+        <select v-model="form.status" class="mb2">
+          <option
+            v-for="item in typeOptions"
             :key="item.value"
-            :value="item.value">
+            :value="item.value"
+          >
             {{ item.text }}
           </option>
         </select>
       </div>
-      
+
       <div class="flex-50-item">
         <input
+          v-model="form.date"
           class="mb2"
           type="date"
-          v-model="form.date"
           autocomplete="off"
           title="Дата создания"
-          placeholder="Дата создания">
+          placeholder="Дата создания"
+        />
       </div>
     </div>
 
     <button class="mr2 p5" @click="$emit('submit')">Ок</button>
+
     <button class="p5" @click="$emit('cancel')">Отмена</button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { PropType, reactive, watch } from 'vue';
-import IHistoryItem from '@/types/IHistoryItem';
+import { reactive, watch } from 'vue';
 
-const props = defineProps({
-  modelValue: {
-    type: Object as PropType<IHistoryItem>,
-    required: true
-  }
-});
+import type { HistoryItem } from '@/types/HistoryItem';
+
+const props = defineProps<{
+  modelValue: HistoryItem;
+}>();
 
 const emit = defineEmits(['update:modelValue', 'submit', 'cancel']);
 
-const form = reactive<IHistoryItem>({
+const form = reactive<HistoryItem>({
   ...props.modelValue,
   label: props.modelValue.label ?? '',
   text: props.modelValue.text ?? '',
   path: props.modelValue.path ?? '',
   date: props.modelValue.date ?? '',
   song_length: props.modelValue.song_length ?? '',
-  status: props.modelValue.status || 'in_process'
+  status: props.modelValue.status || 'in_process',
 });
 
 const typeOptions = [
@@ -99,18 +104,18 @@ watch(
   (val) => {
     emit('update:modelValue', val);
   },
-  { deep: true }
+  { deep: true },
 );
 </script>
 
 <style scoped>
-  .history-form {
-    list-style-type: none;
-    margin: 5px;
-    padding: 10px;
-    border: 1px solid #d3d3d34d;
-    border-radius: 5px;
-    padding: 10px;
-    background-color: #f5f5f5;
-  }
+.history-form {
+  list-style-type: none;
+  margin: 5px;
+  padding: 10px;
+  border: 1px solid #d3d3d34d;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #f5f5f5;
+}
 </style>

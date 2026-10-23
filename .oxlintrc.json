@@ -1,0 +1,19 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["eslint", "typescript", "unicorn", "oxc", "vue"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn"
+  },
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "ignorePatterns": ["**/node_modules/**", "backend/dist/**", "backend/data/**", "**/*.min.js"],
+  "rules": {
+    "no-console": "off",
+    "no-debugger": "off",
+    "prefer-const": "off",
+    "oxc/no-async-endpoint-handlers": "off"
+  }
+}

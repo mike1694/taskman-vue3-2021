@@ -1,41 +1,42 @@
 <template>
-  <h4 class="history-header">История | 
-    <button class="text-right p4"
-      @click="toggleHistoryCreate(true)">
-        Добавить историю
+  <h4 class="history-header">
+    История |
+    <button class="text-right p4" @click="toggleHistoryCreate(true)">
+      Добавить историю
     </button>
   </h4>
 
   <div class="history-component">
-    <history-create
-      v-if="showHistoryCreate">
-    </history-create>
+    <HistoryCreate v-if="showHistoryCreate"> </HistoryCreate>
 
     <div class="history-list mb4">
-      <history-item
+      <HistoryItemComponent
         v-for="(item, key) in historySorted"
         :item="item"
-        :key="key">
-      </history-item>
+        :key="key"
+      >
+      </HistoryItemComponent>
     </div>
-
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
-import HistoryItem from '@/components/HistoryItem.vue';
-import HistoryCreate from '@/components/HistoryCreate.vue';
+
 import { useHistoryStore } from '@/store/history';
-import IHistoryItem from '@/types/IHistoryItem';
+import type { HistoryItem } from '@/types/HistoryItem';
+
+import HistoryItemComponent from '@/components/HistoryItem.vue';
+import HistoryCreate from '@/components/HistoryCreate.vue';
 
 const historyStore = useHistoryStore();
 const { history, showHistoryCreate } = storeToRefs(historyStore);
 
-const historySorted = computed<IHistoryItem[]>(() => {
-  return [...history.value]
-    .sort((a: IHistoryItem, b: IHistoryItem) => b.id - a.id);
+const historySorted = computed<HistoryItem[]>(() => {
+  return history.value.toSorted(
+    (a: HistoryItem, b: HistoryItem) => b.id - a.id,
+  );
 });
 
 function toggleHistoryCreate(payload: boolean) {

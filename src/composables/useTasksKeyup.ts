@@ -2,7 +2,7 @@ import { onMounted, onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router';
 import { useTasksStore } from '@/store/tasks';
 
-export default function useTasksKeyup(): void {
+export function useTasksKeyup(): void {
   const route = useRoute();
   const tasksStore = useTasksStore();
 
@@ -13,7 +13,10 @@ export default function useTasksKeyup(): void {
     if (e.target instanceof HTMLInputElement && e.code !== 'Escape') {
       return;
     }
-    if (e.target instanceof HTMLTextAreaElement && e.code !== 'Escape') {
+    if (
+      e.target instanceof HTMLTextAreaElement &&
+      e.code !== 'Escape'
+    ) {
       return;
     }
 

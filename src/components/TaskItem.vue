@@ -1,35 +1,44 @@
 <template>
   <div class="task-item">
-        
     <label class="task-item__container">
-    <input type="checkbox"
+      <input
+        :checked="props.item.closed"
+        :disabled="!props.item.reopen && props.item.closed"
+        type="checkbox"
         class="task-item__checkbox"
-        :checked="item.closed"
-        @click="$emit('click', item.id)"
-        :disabled="!item.reopen && item.closed">
-      <div class="task-item__label">{{ item.label }}</div>
-      <div v-if="item.type === 'hot'" class="task-item__end-date info-label">
+        @click="$emit('click', props.item.id)"
+      />
+
+      <div class="task-item__label">{{ props.item.label }}</div>
+
+      <div
+        v-if="props.item.type === 'hot'"
+        class="task-item__end-date info-label"
+      >
         {{ getEndDate }}
       </div>
     </label>
 
     <div class="task-item__content">
-      <div v-if="showInfo && item.info"
-        class="text-left task-item__info-block primary-label">
-            <b>Описание:</b> {{ item.info }}
+      <div
+        v-if="showInfo && props.item.info"
+        class="text-left task-item__info-block primary-label"
+      >
+        <b>Описание:</b> {{ props.item.info }}
       </div>
 
-      <div v-if="item.closed && item.result"
-        class="text-left task-item__result success-label">
-            <b>Итог:</b> {{ item.result }}
+      <div
+        v-if="props.item.closed && props.item.result"
+        class="text-left task-item__result success-label"
+      >
+        <b>Итог:</b> {{ props.item.result }}
       </div>
-        
+
       <!-- <task-timer v-if="tasksTimer && item.timer && !item.closed"
         :item="item">
       </task-timer> -->
 
-      <div class="task-item__date-block"
-        v-if="showDate">
+      <div v-if="showDate" class="task-item__date-block">
         {{ getCreatedDate }}
       </div>
     </div>
@@ -37,21 +46,20 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType } from 'vue';
+import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
-import ITaskItem from '@/types/ITaskItem';
-import { useTaskSettingsStore } from '@/store/task_settings';
-import { getFormatDateTime } from '@/api/date_time_format';
 
-const props = defineProps({
-  item: {
-    type: Object as PropType<ITaskItem>,
-    required: true
-  }
-});
+import type { TaskItem } from '@/types/TaskItem';
+import { useTaskSettingsStore } from '@/store/taskSettings';
+import { getFormatDateTime } from '@/api/dateTimeFormat';
+
+const props = defineProps<{
+  item: TaskItem;
+}>();
 
 const taskSettingsStore = useTaskSettingsStore();
-const { showInfo, showDate, tasksTimer } = storeToRefs(taskSettingsStore);
+const { showInfo, showDate, tasksTimer } =
+  storeToRefs(taskSettingsStore);
 
 const dateType = ['date', 'date-time'];
 
@@ -68,7 +76,7 @@ const getCreatedDate = computed((): string => {
 
 const getEndDate = computed((): string => {
   const date = new Date(
-    props.item.maxDate + ' ' + (props.item.maxTime || '00:00')
+    props.item.maxDate + ' ' + (props.item.maxTime || '00:00'),
   );
 
   return getFormatDateTime(date);
@@ -107,7 +115,7 @@ const getEndDate = computed((): string => {
   margin-right: 5px;
 }
 
-.task-item__date-block  {
+.task-item__date-block {
   color: lightgray;
   font-weight: bold;
   font-size: 12px;

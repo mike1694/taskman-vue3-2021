@@ -5,8 +5,9 @@
 </template>
 
 <script setup lang="ts">
+import { useTasksKeyup } from '@/composables/useTasksKeyup';
+
 import TasksComponent from '@/components/TasksComponent.vue';
-import useTasksKeyup from '@/composables/useTasksKeyup';
 
 useTasksKeyup();
 </script>

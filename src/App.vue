@@ -1,18 +1,23 @@
 <template>
   <div id="nav" class="mb2">
     <router-link to="/">Задачи</router-link> |
+
     <router-link to="/create">Создать задачу</router-link> |
+
     <router-link to="/history">История</router-link>
   </div>
+
   <!-- <div class="wallpaper"></div> -->
-  <router-view/>
+
+  <router-view />
 </template>
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
+
 import { useTasksStore } from '@/store/tasks';
 import { useHistoryStore } from '@/store/history';
-import useAppRouteKeyup from '@/composables/useAppRouteKeyup';
+import { useAppRouteKeyup } from '@/composables/useAppRouteKeyup';
 
 const tasksStore = useTasksStore();
 const historyStore = useHistoryStore();

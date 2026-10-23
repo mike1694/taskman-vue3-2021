@@ -9,22 +9,23 @@ router.get('/', async (req: Request, res: Response) => {
   try {
     const db = await initDb();
     const result = db.exec('SELECT * FROM tasks ORDER BY id DESC');
-    const tasks: TaskItem[] = result.length > 0
-      ? result[0].values.map((row: any) => ({
-          id: row[0] as number,
-          label: row[1] as string,
-          type: row[2] as string,
-          created: row[3] as string,
-          info: row[4] as string | null,
-          maxDate: row[5] as string | null,
-          maxTime: row[6] as string | null,
-          reopen: Boolean(row[7]),
-          timer: Boolean(row[8]),
-          closed: Boolean(row[9]),
-          result: row[10] as string | null,
-          closed_date: row[11] as string | null,
-        }))
-      : [];
+    const tasks: TaskItem[] =
+      result.length > 0
+        ? result[0].values.map((row: any) => ({
+            id: row[0] as number,
+            label: row[1] as string,
+            type: row[2] as string,
+            created: row[3] as string,
+            info: row[4] as string | null,
+            maxDate: row[5] as string | null,
+            maxTime: row[6] as string | null,
+            reopen: Boolean(row[7]),
+            timer: Boolean(row[8]),
+            closed: Boolean(row[9]),
+            result: row[10] as string | null,
+            closed_date: row[11] as string | null,
+          }))
+        : [];
     res.json(tasks);
   } catch (err) {
     console.error('Error fetching tasks:', err);
@@ -38,7 +39,9 @@ router.post('/task/create', async (req: Request, res: Response) => {
     const task: TaskItem = req.body;
     const db = await initDb();
     db.run(
-      `INSERT INTO tasks (label, type, created, info, maxDate, maxTime, reopen, timer, closed, result, closed_date)
+      `INSERT INTO tasks (label, type, created, info,
+       maxDate, maxTime, reopen, timer, closed, result,
+       closed_date)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         task.label,
@@ -52,7 +55,7 @@ router.post('/task/create', async (req: Request, res: Response) => {
         task.closed ? 1 : 0,
         task.result || null,
         task.closed_date || null,
-      ]
+      ],
     );
     const result = db.exec('SELECT last_insert_rowid()');
     const id = result[0].values[0][0] as number;
@@ -70,7 +73,9 @@ router.post('/task/update', async (req: Request, res: Response) => {
     const task: TaskItem = req.body;
     const db = await initDb();
     db.run(
-      `UPDATE tasks SET label=?, type=?, info=?, maxDate=?, maxTime=?, reopen=?, timer=?, closed=?, result=?, closed_date=?
+      `UPDATE tasks SET label=?, type=?, info=?, maxDate=?,
+       maxTime=?, reopen=?, timer=?, closed=?, result=?,
+       closed_date=?
        WHERE id=?`,
       [
         task.label,
@@ -84,7 +89,7 @@ router.post('/task/update', async (req: Request, res: Response) => {
         task.result || null,
         task.closed_date || null,
         task.id,
-      ]
+      ],
     );
     save();
     res.json({ ok: true });
