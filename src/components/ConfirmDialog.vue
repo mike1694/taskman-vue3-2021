@@ -1,20 +1,28 @@
 <template>
   <div v-if="props.visible" class="confirm-dialog-overlay">
     <div class="confirm-dialog">
+      <button
+        class="confirm-dialog__close"
+        aria-label="Закрыть"
+        @click="cancel"
+      >
+        ×
+      </button>
+
       <div class="confirm-dialog__content">
-        <p>{{ props.message }}</p>
+        <p class="confirm-dialog__message">{{ props.message }}</p>
       </div>
 
       <div class="confirm-dialog__actions">
         <button
-          class="confirm-dialog__btn confirm-dialog__btn--yes"
+          class="btn confirm-dialog__btn confirm-dialog__btn--yes"
           @click="confirm"
         >
           Да
         </button>
 
         <button
-          class="confirm-dialog__btn confirm-dialog__btn--no"
+          class="btn confirm-dialog__btn confirm-dialog__btn--no"
           @click="cancel"
         >
           Нет
@@ -25,6 +33,8 @@
 </template>
 
 <script setup lang="ts">
+import { onBeforeUnmount, onMounted } from 'vue';
+
 const props = defineProps({
   visible: {
     type: Boolean,
@@ -45,6 +55,23 @@ function confirm() {
 function cancel() {
   emit('cancel');
 }
+
+const keyupHandler = (e: KeyboardEvent): void => {
+  if (!props.visible || e.code !== 'Escape') {
+    return;
+  }
+
+  e.stopImmediatePropagation();
+  emit('cancel');
+};
+
+onMounted(() => {
+  document.body.addEventListener('keyup', keyupHandler);
+});
+
+onBeforeUnmount(() => {
+  document.body.removeEventListener('keyup', keyupHandler);
+});
 </script>
 
 <style scoped>
@@ -54,30 +81,60 @@ function cancel() {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.5);
   z-index: 9999;
 }
 
 .confirm-dialog {
-  background: white;
-  border-radius: 8px;
-  padding: 24px;
-  min-width: 300px;
+  position: relative;
+  width: 100%;
   max-width: 400px;
+  padding: 24px;
+  background: #f5f5f5;
+  border: 1px solid #d3d3d34d;
+  border-radius: 5px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.confirm-dialog__close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #666;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.confirm-dialog__close:hover {
+  background: #e0e0e0;
+  color: #333;
 }
 
 .confirm-dialog__content {
   margin-bottom: 20px;
+  padding-right: 16px;
 }
 
-.confirm-dialog__content p {
+.confirm-dialog__message {
   margin: 0;
   font-size: 16px;
+  line-height: 1.5;
   color: #333;
+  word-break: break-word;
 }
 
 .confirm-dialog__actions {
@@ -87,17 +144,13 @@ function cancel() {
 }
 
 .confirm-dialog__btn {
+  min-width: 80px;
   padding: 8px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
   font-size: 14px;
-  transition: 0.3s;
 }
 
 .confirm-dialog__btn--yes {
   background: #dc3545;
-  color: white;
 }
 
 .confirm-dialog__btn--yes:hover {
@@ -106,7 +159,6 @@ function cancel() {
 
 .confirm-dialog__btn--no {
   background: #6c757d;
-  color: white;
 }
 
 .confirm-dialog__btn--no:hover {

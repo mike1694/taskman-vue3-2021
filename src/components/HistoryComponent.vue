@@ -1,7 +1,10 @@
 <template>
-  <h4 class="history-header">
+  <h4 class="history-component__header">
     История |
-    <button class="text-right p4" @click="toggleHistoryCreate(true)">
+    <button
+      class="btn text-right p4"
+      @click="toggleHistoryCreate(true)"
+    >
       Добавить историю
     </button>
   </h4>

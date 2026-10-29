@@ -1,5 +1,11 @@
 <template>
-  <div class="task-item">
+  <div
+    :class="{
+      'task-item--closed': props.item.closed,
+      'task-item--hot': props.item.type === 'hot',
+    }"
+    class="task-item"
+  >
     <label class="task-item__container">
       <input
         :checked="props.item.closed"
@@ -75,6 +81,10 @@ const getCreatedDate = computed((): string => {
 });
 
 const getEndDate = computed((): string => {
+  if (!props.item.maxDate) {
+    return '';
+  }
+
   const date = new Date(
     props.item.maxDate + ' ' + (props.item.maxTime || '00:00'),
   );
@@ -84,12 +94,7 @@ const getEndDate = computed((): string => {
 </script>
 
 <style scoped>
-.finished-tasks h4,
-.finished-tasks-by-date h4 {
-  color: gray;
-}
-.finished-tasks label,
-.finished-tasks-by-date label {
+.task-item--closed .task-item__label {
   color: gray;
   text-decoration: line-through;
 }
@@ -112,7 +117,7 @@ const getEndDate = computed((): string => {
 }
 .task-item__checkbox {
   cursor: pointer;
-  margin-right: 5px;
+  margin-right: 4px;
 }
 
 .task-item__date-block {
@@ -124,7 +129,13 @@ const getEndDate = computed((): string => {
 
 .task-item__info-block,
 .task-item__result {
-  margin-top: 5px;
-  padding: 5px;
+  margin-top: 4px;
+  padding: 4px;
+}
+
+.task-item__info-block {
+  padding: 12px;
+  font-size: 14px;
+  line-height: 1.5;
 }
 </style>

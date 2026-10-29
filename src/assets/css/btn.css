@@ -1,4 +1,4 @@
-button {
+.btn {
   min-width: 50px;
   font-size: 10px;
   font-weight: bold;
@@ -14,12 +14,12 @@ button {
   background-color: #17a2b8;
   transition: 0.3s;
 }
-button:hover {
+.btn:hover {
   opacity: 1;
   /* transform: scale(1.1); */
   border-color: #17a2b8;
 }
 
-button:active {
+.btn:active {
   background-color: #0f5661;
 }

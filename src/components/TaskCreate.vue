@@ -4,9 +4,9 @@
 
     <TaskForm v-model="vmodel"> </TaskForm>
 
-    <button class="mr2 p5" @click="addTask">Ок</button>
+    <button class="btn mr2 p5" @click="addTask">Ок</button>
 
-    <button class="p5" @click="resetModal">Отмена</button>
+    <button class="btn p5" @click="resetModal">Отмена</button>
   </div>
 </template>
 
@@ -77,6 +77,9 @@ onBeforeUnmount(() => {
 
 function addTask() {
   if (!vmodel.value.label) return undefined;
+  if (vmodel.value.type === 'hot' && !vmodel.value.maxDate) {
+    return undefined;
+  }
 
   const res: TaskItem = {
     ...vmodel.value,

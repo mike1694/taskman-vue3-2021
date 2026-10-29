@@ -5,15 +5,15 @@
         v-model="form.label"
         v-focus
         type="text"
-        class="create-task-modal__header--input"
+        class="task-form__input field"
         autocomplete="off"
         placeholder="Название задачи"
       />
     </div>
 
-    <div class="row">
-      <div class="col">
-        <select v-model="form.type" class="mb2">
+    <div>
+      <div>
+        <select v-model="form.type" class="field field--select mb2">
           <option
             v-for="item in typeOptions"
             :key="item.value"
@@ -25,20 +25,12 @@
 
         <div class="flex-center mb2">
           <label class="mr2">
-            <input
-              v-model="form.reopen"
-              class="text-left"
-              type="checkbox"
-            />
+            <input v-model="form.reopen" type="checkbox" />
             Переокрывать
           </label>
 
           <label v-if="form.maxTime">
-            <input
-              v-model="form.timer"
-              class="text-left"
-              type="checkbox"
-            />
+            <input v-model="form.timer" type="checkbox" />
             Таймер
           </label>
         </div>
@@ -50,6 +42,7 @@
             v-model="form.maxDate"
             :disabled="form.type !== 'hot'"
             type="date"
+            class="field"
           />
         </div>
 
@@ -58,16 +51,21 @@
             v-model="form.maxTime"
             :disabled="!form.maxDate || form.type !== 'hot'"
             type="time"
+            class="field"
           />
         </div>
       </div>
     </div>
 
+    <p v-if="isHotWithoutDate" class="task-form__error">
+      Для срочной задачи укажите дату
+    </p>
+
     <div class="mb2">
       <textarea
         v-model="form.info"
         placeholder="Описание"
-        class="create-task-modal__header--textarea"
+        class="task-form__textarea field"
         rows="3"
         max-rows="6"
       >
@@ -78,7 +76,7 @@
       <textarea
         v-model="form.result"
         placeholder="Результат"
-        class="create-task-modal__header--textarea"
+        class="task-form__textarea field"
         rows="3"
         max-rows="6"
       >
@@ -88,7 +86,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watch } from 'vue';
+import { computed, reactive, watch } from 'vue';
 
 import type { TaskItem } from '@/types/TaskItem';
 
@@ -114,6 +112,21 @@ const typeOptions = [
   { value: 'hot', text: 'Срочная' },
 ];
 
+const isHotWithoutDate = computed((): boolean => {
+  return form.type === 'hot' && !form.maxDate;
+});
+
+watch(
+  () => form.maxDate,
+  (val) => {
+    if (!val) {
+      form.maxDate = null;
+      form.maxTime = null;
+      form.type = 'normal';
+    }
+  },
+);
+
 watch(
   form,
   (val) => {
@@ -123,4 +136,9 @@ watch(
 );
 </script>
 
-<style scoped></style>
+<style scoped>
+.task-form__error {
+  color: #dc3545;
+  font-size: 14px;
+}
+</style>

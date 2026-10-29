@@ -5,7 +5,7 @@
         v-model="form.label"
         v-focus
         type="text"
-        class="create-task-modal__header--input"
+        class="history-form__input field"
         autocomplete="off"
         placeholder="Заголовок"
       />
@@ -14,6 +14,7 @@
     <div class="mb2">
       <textarea
         v-model="form.text"
+        class="field"
         placeholder="Описание"
         rows="3"
         max-rows="6"
@@ -25,6 +26,7 @@
       <input
         v-model="form.path"
         type="text"
+        class="field"
         autocomplete="off"
         placeholder="Папка проекта"
       />
@@ -35,7 +37,7 @@
         <input
           v-model="form.song_length"
           type="time"
-          class="mb2"
+          class="field mb2"
           autocomplete="off"
           title="Продолжительность"
           placeholder="Продолжительность"
@@ -43,7 +45,7 @@
       </div>
 
       <div class="flex-50-item">
-        <select v-model="form.status" class="mb2">
+        <select v-model="form.status" class="field field--select mb2">
           <option
             v-for="item in typeOptions"
             :key="item.value"
@@ -57,7 +59,7 @@
       <div class="flex-50-item">
         <input
           v-model="form.date"
-          class="mb2"
+          class="field mb2"
           type="date"
           autocomplete="off"
           title="Дата создания"
@@ -66,9 +68,9 @@
       </div>
     </div>
 
-    <button class="mr2 p5" @click="$emit('submit')">Ок</button>
+    <button class="btn mr2 p5" @click="$emit('submit')">Ок</button>
 
-    <button class="p5" @click="$emit('cancel')">Отмена</button>
+    <button class="btn p5" @click="$emit('cancel')">Отмена</button>
   </div>
 </template>
 
@@ -115,7 +117,6 @@ watch(
   padding: 10px;
   border: 1px solid #d3d3d34d;
   border-radius: 5px;
-  padding: 10px;
   background-color: #f5f5f5;
 }
 </style>

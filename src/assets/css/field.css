@@ -1,8 +1,4 @@
-input[type='date'],
-input[type='time'],
-input[type='text'],
-textarea,
-select {
+.field {
   pointer-events: auto;
   box-sizing: border-box;
   margin: 0;
@@ -23,16 +19,12 @@ select {
   border-radius: 4px;
 }
 
-select {
+.field--select {
   cursor: pointer;
   line-height: 20px;
 }
 
-input[type='date']:focus,
-input[type='time']:focus,
-input[type='text']:focus,
-textarea:focus,
-select:focus {
+.field:focus {
   border-color: #80bdff;
   outline: 0;
   box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);

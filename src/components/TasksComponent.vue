@@ -2,12 +2,12 @@
   <div class="tasks-component mb4">
     <div
       :style="{ 'flex-direction': tasksDirection ? 'row' : 'column' }"
-      class="tasks-content"
+      class="tasks-component__content"
     >
       <TaskList
         key="hot-tasks"
         :data="hotTasks"
-        class-name="hot-tasks"
+        class-name="task-list--hot"
         title="Важные"
       >
       </TaskList>
@@ -15,7 +15,7 @@
       <TaskList
         key="current-tasks"
         :data="currentTasks"
-        class-name="current-tasks"
+        class-name="task-list--current"
         title="Текущие"
       >
       </TaskList>
@@ -23,7 +23,7 @@
       <TaskList
         v-if="!finishedByDate"
         :data="finishedTasks"
-        class-name="finished-tasks"
+        class-name="task-list--finished"
         title="Завершенные"
       >
       </TaskList>
@@ -34,7 +34,7 @@
         :key="'finished-tasks' + date"
         :data="finishedTasksByDate[date]"
         :title="date"
-        class-name="finished-tasks-by-date"
+        class-name="task-list--finished-by-date"
       >
       </TaskList>
     </div>
@@ -71,17 +71,13 @@ const isAllFinished = computed((): boolean => {
 });
 
 const hotTasks = computed<TaskItem[]>(() => {
-  const now = new Date();
-
   return opened.value
     .filter((i: TaskItem) => i.type === 'hot')
     .toSorted((a: TaskItem, b: TaskItem): number => {
-      const endA = new Date(a.maxDate + ' ' + a.maxTime);
-      const endB = new Date(b.maxDate + ' ' + b.maxTime);
-      const diffDateA = endA.getTime() - now.getTime();
-      const diffDateB = endB.getTime() - now.getTime();
+      const dateA = a.maxDate ?? '';
+      const dateB = b.maxDate ?? '';
 
-      return diffDateA - diffDateB;
+      return dateA < dateB ? -1 : dateA > dateB ? 1 : 0;
     });
 });
 
@@ -117,21 +113,3 @@ const finishedTasksByDate = computed<TasksObject>(() => {
   return res;
 });
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>

@@ -27,9 +27,12 @@
             }}
           </span>
 
-          <button class="p2" @click="edit">edit</button>
+          <button class="btn p2" @click="edit">edit</button>
 
-          <button class="p2 history-item__delete" @click="deleteItem">
+          <button
+            class="btn p2 history-item__delete"
+            @click="deleteItem"
+          >
             del
           </button>
         </div>
@@ -71,8 +74,8 @@
     </HistoryForm>
 
     <ConfirmDialog
-      :visible="!!getConfirmDelete"
-      :message="'Удалить запись #' + getConfirmDelete + '?'"
+      :visible="getConfirmDelete === props.item.id"
+      :message="'Удалить запись «' + props.item.label + '»?'"
       @confirm="confirmDelete"
       @cancel="cancelDelete"
     >
@@ -178,7 +181,6 @@ function copyPathText() {
   padding: 10px;
   border: 1px solid #d3d3d34d;
   border-radius: 5px;
-  padding: 10px;
   background-color: #f5f5f5;
 }
 
